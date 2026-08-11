@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#f9fafb">
 <meta name="description" content="Tarifas oficiales de transporte terrestre Ecuador 2026 con registro de ventas diarias y reporte de caja.">
 <title>RutaEC · Tarifas transporte Ecuador 2026</title>
@@ -50,7 +50,7 @@ html{scroll-behavior:smooth;}
 @keyframes float{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(40px,-30px) scale(1.1);}66%{transform:translate(-30px,30px) scale(.95);}}
 
 /* ── header ──────────────────────────────────── */
-.header{background:linear-gradient(135deg,#6366f1,#8b5cf6 60%,#ec4899);background-size:200% 200%;animation:headerShift 8s ease infinite;color:#fff;padding:22px 16px;box-shadow:0 8px 30px var(--primary-glow);position:sticky;top:0;z-index:50;overflow:hidden;}
+.header{background:linear-gradient(135deg,#6366f1,#8b5cf6 60%,#ec4899);background-size:200% 200%;animation:headerShift 8s ease infinite;color:#fff;padding:22px 16px;padding-top:calc(22px + env(safe-area-inset-top,0px));box-shadow:0 8px 30px var(--primary-glow);position:sticky;top:0;z-index:50;overflow:hidden;}
 .header::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 0%,rgba(255,255,255,.18),transparent 50%);}
 @keyframes headerShift{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
 .header-inner{max-width:1100px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;position:relative;z-index:1;}
@@ -305,7 +305,7 @@ html[data-theme="dark"] .franja-fav,.fav-pill{background:var(--card);}
 
 /* ── responsive ──────────────────────────────── */
 html{-webkit-text-size-adjust:100%; text-size-adjust:100%;}
-body{overflow-x:hidden; overscroll-behavior-y:contain;}
+body{overflow-x:hidden; overscroll-behavior-y:contain; padding-bottom:env(safe-area-inset-bottom,0px);}
 .tabla-caja,.table-wrap{-webkit-overflow-scrolling:touch; overscroll-behavior:contain;}
 @media(max-width:800px){.two-cols{grid-template-columns:1fr;}}
 @media(max-width:720px){.stats{grid-template-columns:1fr 1fr;}}
@@ -315,11 +315,13 @@ body{overflow-x:hidden; overscroll-behavior-y:contain;}
     .header h1{font-size:18px;}
     .header p{display:none;}
     .header .icon{width:42px;height:42px;font-size:21px;border-radius:13px;}
-    .header-inner{flex-wrap:nowrap;}
-    .header-actions{gap:6px;flex-wrap:nowrap;}
-    .pill{padding:5px 8px;font-size:11px;border-radius:14px;}
-    .pill b{max-width:74px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-    .link-btn{padding:6px 9px;font-size:13px;border-radius:9px;}
+    .header-inner{flex-wrap:wrap;}
+    .header-actions{gap:6px;flex-wrap:wrap;flex:1 1 100%;justify-content:flex-start;}
+    .header-title{flex:1 1 auto;min-width:0;}
+    .pill{padding:5px 10px;font-size:12px;border-radius:14px;white-space:nowrap;}
+    .pill b{max-width:none;overflow:visible;text-overflow:clip;}
+    .pill.hora-b{font-size:12px;}
+    .link-btn{padding:6px 12px;font-size:13px;border-radius:9px;}
     .nav{padding:10px 12px 0;gap:6px;flex-wrap:nowrap;}
     .tab{padding:10px 12px;font-size:12px;border-radius:12px;flex:1;justify-content:center;white-space:nowrap;}
     .tab .tab-badge{flex-shrink:0;}
@@ -356,6 +358,8 @@ body{overflow-x:hidden; overscroll-behavior-y:contain;}
     .m-actions{flex-wrap:wrap;}
     .m-actions .btn{min-height:46px;}
     .cantidad-sel,.toolbar{flex-wrap:wrap;}
+    .toolbar .v-fecha{flex:1 1 100%;width:100%;text-align:center;font-size:12px;padding:6px 10px;}
+    .toolbar input.chip{max-width:150px;}
     th,td{padding:11px 12px;}
     thead th{font-size:10px;}
     .noflex table{font-size:13px;}
@@ -376,6 +380,31 @@ body{overflow-x:hidden; overscroll-behavior-y:contain;}
     *,*::before,*::after{transition:none !important;animation:none !important;}
     html{scroll-behavior:auto;}
     .blob{animation:none;}
+}
+/* móvil: tabla de rutas como tarjetas (sin scroll lateral) */
+@media(max-width:620px){
+    .tabla-caja{overflow-x:hidden;max-height:none;}
+    .tabla-caja table{min-width:0;border-collapse:collapse;}
+    .tabla-caja thead{display:none;}
+    .tabla-caja tbody tr{display:grid;grid-template-columns:1fr auto;gap:4px 10px;padding:12px;align-items:center;border-radius:12px;}
+    .tabla-caja tbody tr:not(:last-child){margin-bottom:8px;}
+    .tabla-caja tbody tr:nth-child(even){background:transparent;}
+    .tabla-caja tbody td{border:none;padding:0;}
+    .tabla-caja tbody td:nth-child(3),.tabla-caja tbody td:nth-child(5){display:none;}
+    .tabla-caja tbody td:nth-child(1){grid-column:1/3;}
+    .tabla-caja tbody td:nth-child(2){grid-column:1/3;}
+    .tabla-caja tbody td:nth-child(4){grid-column:1;text-align:left;}
+    .tabla-caja tbody td:nth-child(6){grid-column:2;justify-self:end;}
+    .tabla-caja tbody td:nth-child(7){grid-column:2;justify-self:end;}
+    .tabla-caja tbody td:nth-child(6){margin-top:6px;}
+    .tabla-caja .aviso-scroll{display:none;}
+    .tabla-caja tbody tr{background:var(--card);box-shadow:var(--shadow);}
+    .tabla-caja tbody tr.sel{outline:2px solid var(--primary);}
+}
+@media(max-width:360px){
+    .tabla-caja tbody tr{grid-template-columns:1fr;gap:6px;}
+    .tabla-caja tbody td:nth-child(4),.tabla-caja tbody td:nth-child(6),.tabla-caja tbody td:nth-child(7){grid-column:1;justify-self:stretch;}
+    .tabla-caja tbody td:nth-child(6) .btn-fav,.tabla-caja tbody td:nth-child(7) .btn-vender{width:100%;}
 }
 </style>
 <header class="header">
@@ -1250,8 +1279,10 @@ function tick(){
   const hh = String(d.getHours()).padStart(2,'0');
   const mm = String(d.getMinutes()).padStart(2,'0');
   const ss = String(d.getSeconds()).padStart(2,'0');
-  document.getElementById('heroFecha').textContent =
-    d.toLocaleDateString('es-ES',{weekday:'short', day:'numeric', month:'short'}).toUpperCase()+' · '+hh+':'+mm+':'+ss;
+  const movil = window.innerWidth <= 620;
+  document.getElementById('heroFecha').textContent = movil
+    ? d.toLocaleDateString('es-ES',{day:'numeric', month:'short'}).toUpperCase()+' '+hh+':'+mm
+    : d.toLocaleDateString('es-ES',{weekday:'short', day:'numeric', month:'short'}).toUpperCase()+' · '+hh+':'+mm+':'+ss;
 }
 
 // ================= TOAST =================
