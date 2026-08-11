@@ -365,10 +365,12 @@ body{overflow-x:hidden; overscroll-behavior-y:contain;}
     .pill{font-size:11px;}
     .header-actions{gap:4px;}
 }
-/* móvil: menos consumo de GPU y animaciones suaves */
+/* móvil: interfaz estática y fluida, sin animaciones nerviosas */
 @media(any-pointer:coarse), (max-width:620px){
-    .blob{filter:blur(50px); opacity:.22;}
-    .header .icon,.ph-icon,.empty-circle{animation-duration:.01s;}
+    .blob{filter:blur(50px); opacity:.22; animation:none;}
+    .header{animation:none;}
+    .header .icon,.ph-icon,.empty-circle,.tab,.stat,.view,.page-head,.franja-fav{animation:none !important;}
+    tbody tr,.l-v-item,.top-ruta{animation:none !important;}
 }
 @media(prefers-reduced-motion:reduce){
     *,*::before,*::after{transition:none !important;animation:none !important;}
@@ -376,6 +378,7 @@ body{overflow-x:hidden; overscroll-behavior-y:contain;}
     .blob{animation:none;}
 }
 </style>
+
 <header class="header">
   <div class="header-inner">
     <div class="header-title">
