@@ -1,653 +1,530 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tarifas de Transporte Terrestre Ecuador 2026</title>
+<title>RutaEC · Tarifas de transporte Ecuador 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root{
-    --tinta:#e6edf9; --gris:#9fb0cf; --gris2:#6b7da0;
-    --azul:#3b82f6; --azul2:#2563eb; --violeta:#8b5cf6; --cielo:#22d3ee;
-    --menta:#34d399; --rosa:#fb7185; --oro:#fbbf24;
-    --fondo:#0a1120; --borde:#26324f; --blanco:#0f1a30;
-    --carta:#131e36; --carta2:#172442;
+    --tinta:#20303f; --gris:#5b6f83; --gris2:#a3b4c4;
+    --teal:#0f9488; --teal-osc:#0b6f66; --teal-claro:#e6f6f3;
+    --amber:#f59e0b; --ambar-claro:#fdf3e0;
+    --coral:#f97316; --rojo:#e5484d;
+    --fondo:#f5f2ea; --carta:#ffffff; --borde:#e8e1d2;
+    --sombra:0 6px 22px rgba(32,48,63,.10);
   }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  *{scrollbar-width:thin; scrollbar-color:#2e3d63 transparent;}
-  ::-webkit-scrollbar{width:9px; height:9px;}
-  ::-webkit-scrollbar-track{background:transparent;}
-  ::-webkit-scrollbar-thumb{background:#2e3d63; border-radius:8px;}
-  ::-webkit-scrollbar-thumb:hover{background:#3c4e7a;}
-  ::selection{background:rgba(59,130,246,.45); color:#fff;}
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
   html{scroll-behavior:smooth;}
   body{
-    font-family:'Poppins',system-ui,-apple-system,Roboto,Arial,sans-serif;
-    color:var(--tinta); min-height:100vh; overflow-x:hidden;
-    background:
-      radial-gradient(1100px 620px at 85% -10%, rgba(34,211,238,.09), transparent 60%),
-      radial-gradient(950px 720px at -10% 20%, rgba(139,92,246,.10), transparent 55%),
-      radial-gradient(900px 600px at 50% 110%, rgba(59,130,246,.07), transparent 60%),
-      #0a1120;
+    font-family:'Poppins',system-ui,sans-serif;
+    background:var(--fondo);
+    background-image:
+      radial-gradient(900px 500px at 85% -10%, rgba(245,158,11,.14), transparent 60%),
+      radial-gradient(800px 500px at -10% 0%, rgba(15,148,136,.12), transparent 55%);
     background-attachment:fixed;
+    color:var(--tinta); min-height:100vh; font-size:15px;
   }
-  /* ---------- HERO (tema oscuro) ---------- */
-  .hero{
-    position:relative; overflow:hidden; text-align:center; color:#fff;
-    padding:26px 18px 74px;
-    background:linear-gradient(135deg,#080d24 0%,#0f1a3e 42%,#1d1345 78%,#082030 100%);
-    border-radius:0 0 34px 34px;
-    box-shadow:0 14px 50px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.06);
-  }
-  .hero::before,.hero::after{
-    content:''; position:absolute; border-radius:50%; opacity:.4; will-change:transform;
-    animation:aurora 20s ease-in-out infinite;
-  }
-  .hero::before{
-    width:440px;height:440px; left:-160px; top:-150px;
-    background:radial-gradient(circle, rgba(139,92,246,.5) 0%, rgba(139,92,246,0) 70%);
-  }
-  .hero::after{
-    width:400px;height:400px; right:-140px; bottom:-180px;
-    background:radial-gradient(circle, rgba(34,211,238,.45) 0%, rgba(34,211,238,0) 70%);
-    animation-delay:-10s;
-  }
-  .hero .bus{
-    position:absolute; right:7%; bottom:-10px; font-size:6.5rem; opacity:.09; z-index:1;
-    transform:rotate(-8deg); animation:flota-bus 6s ease-in-out infinite; pointer-events:none;
-  }
-  @keyframes flota-bus{0%,100%{transform:rotate(-8deg) translateY(0);} 50%{transform:rotate(-8deg) translateY(-12px);}}
-  @keyframes aurora{
-    0%,100%{transform:translate(0,0) scale(1);}
-    33%{transform:translate(50px,40px) scale(1.15);}
-    66%{transform:translate(-40px,30px) scale(.92);}
-  }
-  .hero .contenido{position:relative; z-index:2; max-width:720px; margin:0 auto;}
-  .hero-top{
-    display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:14px;
-    animation:bajar .7s ease both;
-  }
-  .hero-chip{
-    display:inline-flex; align-items:center; gap:7px; font-size:.7rem; font-weight:500; color:#cdd9f5;
-    background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.14);
-    padding:6px 14px; border-radius:40px; backdrop-filter:blur(6px);
-  }
-  .hero-chip b{font-weight:700; color:#fff;}
-  .hero-chip.verde b{background:linear-gradient(90deg,#6ee7b7,#7dd3fc); -webkit-background-clip:text; background-clip:text; color:transparent;}
-  .hero .pill{
-    display:inline-flex; align-items:center; gap:6px; font-size:.62rem; font-weight:600;
-    letter-spacing:1.2px; text-transform:uppercase; color:#d8e3ff;
-    background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.16);
-    padding:5px 13px; border-radius:40px; backdrop-filter:blur(6px);
-    animation:bajar .7s ease both;
-  }
-  .hero h1{
-    font-size:clamp(1.2rem,4vw,1.9rem); font-weight:800; line-height:1.2; margin:12px 0 6px;
-    color:#f2f6ff; animation:bajar .7s ease .08s both;
-  }
-  .hero h1 .resaltado{background:linear-gradient(90deg,#7dd3fc,#a78bfa,#f9a8d4); -webkit-background-clip:text; background-clip:text; color:transparent;}
-  .hero p{font-size:.8rem; font-weight:300; opacity:.85; color:#c7d3ef; animation:bajar .7s ease .16s both;}
-  .stats{
-    display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-top:14px;
-    animation:bajar .7s ease .24s both;
-  }
-  .stat{
-    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.13);
-    border-radius:14px; padding:7px 16px; min-width:96px; backdrop-filter:blur(6px);
-  }
-  .stat .num{font-size:1.1rem; font-weight:800; line-height:1.1; color:#fff;}
-  .stat .eti{font-size:.6rem; font-weight:500; letter-spacing:.7px; text-transform:uppercase; opacity:.7;}
-  @keyframes bajar{from{opacity:0; transform:translateY(-16px);} to{opacity:1; transform:none;}}
+  ::selection{background:rgba(15,148,136,.25);}
+  ::-webkit-scrollbar{width:9px; height:9px;}
+  ::-webkit-scrollbar-thumb{background:#c9d8d4; border-radius:9px;}
+  ::-webkit-scrollbar-thumb:hover{background:#b3c8c2;}
+  .hidden{display:none !important;}
 
-  /* ---------- CONTENIDO ---------- */
-  .wrap{max-width:1000px; margin:-48px auto 0; padding:0 14px 50px; position:relative; z-index:3;}
+  /* ── barra superior ─────────────────────────────── */
+  .barra{
+    position:sticky; top:0; z-index:30;
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    padding:11px 20px;
+    background:linear-gradient(90deg,#0b6f66,#0f9488 50%,#0ea0a6);
+    color:#fff; box-shadow:0 4px 18px rgba(11,111,102,.35);
+  }
+  .barra-izq{display:flex; align-items:center; gap:12px;}
+  .logo{display:flex; align-items:center; gap:9px; font-size:1.06rem; font-weight:800; letter-spacing:.2px;}
+  .logo .burb{
+    width:36px; height:36px; border-radius:11px; background:rgba(255,255,255,.2);
+    display:flex; align-items:center; justify-content:center; font-size:1.15rem;
+    box-shadow:inset 0 -3px 0 rgba(0,0,0,.12);
+  }
+  .barra .sub{font-size:.68rem; font-weight:500; opacity:.85; letter-spacing:.3px; text-transform:uppercase; display:block; margin-top:1px;}
+  .barra-der{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .barra-chip{
+    display:flex; align-items:center; gap:7px; padding:7px 13px; border-radius:999px;
+    background:rgba(255,255,255,.16); font-size:.74rem; font-weight:600; backdrop-filter:blur(4px);
+  }
+  .barra-chip .punto{width:8px; height:8px; border-radius:50%; background:#ffe08a; animation:latido 2s infinite;}
+  @keyframes latido{0%,100%{opacity:1; transform:scale(1);}50%{opacity:.5; transform:scale(.8);}}
 
-  /* buscador */
-  .buscador{
-    background:rgba(19,30,54,.85); backdrop-filter:blur(14px);
-    border:1px solid rgba(80,100,150,.28); border-radius:18px; padding:16px;
-    box-shadow:0 18px 50px rgba(0,0,0,.45); animation:subir .7s ease .1s both;
+  /* ── panel dos columnas ──────────────────────────── */
+  .panel{
+    max-width:1220px; margin:20px auto; padding:0 16px;
+    display:grid; grid-template-columns:340px minmax(0,1fr); gap:18px; align-items:start;
   }
-  @keyframes subir{from{opacity:0; transform:translateY(24px);} to{opacity:1; transform:none;}}
-  .buscador .saludo{
-    display:flex; align-items:center; gap:8px; font-size:.74rem; font-weight:500; color:var(--gris);
-    margin-bottom:12px;
+  .sidebar{position:sticky; top:86px; display:flex; flex-direction:column; gap:14px; z-index:10;}
+  .main{min-width:0; display:flex; flex-direction:column; gap:14px;}
+
+  .tarjeta{
+    background:var(--carta); border:1px solid var(--borde); border-radius:18px;
+    box-shadow:var(--sombra); padding:16px;
   }
-  .buscador .saludo::before{
-    content:''; width:26px; height:2px; border-radius:2px;
-    background:linear-gradient(90deg,var(--azul),var(--cielo),var(--violeta));
+
+  .estad-tit{font-size:.72rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--teal); display:flex; align-items:center; gap:7px; margin-bottom:12px;}
+  .estad-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+  .estad-grid .e{
+    background:linear-gradient(160deg,#f2fbf9,#e8f6f2); border:1px solid #cfe9e2;
+    border-radius:13px; padding:10px 6px; text-align:center;
   }
-  .buscador .saludo b{background:linear-gradient(90deg,var(--azul),var(--violeta)); -webkit-background-clip:text; background-clip:text; color:transparent;}
-  .campos{display:flex; align-items:flex-end; gap:8px; flex-wrap:wrap;}
-  .campo{flex:1 1 230px; position:relative;}
-  .campo label{display:block; font-size:.6rem; font-weight:700; text-transform:uppercase; letter-spacing:1.1px; color:var(--gris2); margin-bottom:5px;}
-  .campo .icon{position:absolute; left:11px; bottom:10px; font-size:.85rem; pointer-events:none; opacity:.8;}
+  .e-num{font-size:1.18rem; font-weight:800; color:var(--teal-osc); line-height:1;}
+  .e-tag{font-size:.62rem; font-weight:600; color:var(--gris); margin-top:4px; text-transform:uppercase; letter-spacing:.4px;}
+
+  .tabs-col{display:flex; flex-direction:column; gap:8px;}
+  .tab{
+    display:flex; align-items:center; gap:10px; width:100%;
+    padding:12px 15px; border-radius:14px; border:1px solid var(--borde);
+    background:#fff; color:var(--gris); font-family:inherit; font-size:.86rem; font-weight:700;
+    cursor:pointer; transition:.2s; box-shadow:var(--sombra);
+  }
+  .tab:hover{transform:translateX(3px); border-color:var(--teal); color:var(--teal-osc);}
+  .tab.activo{
+    background:linear-gradient(135deg,#0f9488,#0ea0a6); color:#fff; border-color:transparent;
+    box-shadow:0 8px 20px rgba(15,148,136,.35);
+  }
+  .tab .tab-badge{
+    margin-left:auto; min-width:24px; height:24px; padding:0 7px; border-radius:999px;
+    display:inline-flex; align-items:center; justify-content:center;
+    background:var(--amber); color:#fff; font-size:.72rem; font-weight:800;
+  }
+  .tab.activo .tab-badge{background:rgba(255,255,255,.25);}
+
+  .saludo{font-size:.9rem; font-weight:600; margin-bottom:13px; display:flex; align-items:center; gap:8px;}
+  .saludo b{color:var(--teal-osc);}
+  .campos{display:flex; flex-direction:column; gap:9px;}
+  .campo{position:relative;}
+  .campo label{display:block; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--gris); margin:0 0 5px 3px;}
   .campo input{
-    width:100%; padding:10px 34px 10px 32px; font-size:.88rem; font-family:inherit; color:var(--tinta);
-    border:1.5px solid var(--borde); border-radius:11px; background:#0d1629;
-    transition:border .2s, box-shadow .2s;
+    width:100%; padding:11px 38px 11px 40px; border:1.5px solid var(--borde); border-radius:13px;
+    background:#fbfaf6; font-family:inherit; font-size:.9rem; color:var(--tinta); outline:none; transition:.2s;
   }
-  .campo input::placeholder{color:#5a6a8c;}
-  .campo input:focus{
-    outline:none; border-color:var(--cielo); box-shadow:0 0 0 3px rgba(34,211,238,.15);
-    background:#0f1a32;
-  }
+  .campo input:focus{border-color:var(--teal); box-shadow:0 0 0 4px rgba(15,148,136,.14); background:#fff;}
+  .campo .ic{position:absolute; left:13px; top:34px; font-size:.95rem; opacity:.75; pointer-events:none;}
   .campo .borrar{
-    position:absolute; right:8px; bottom:8px; width:22px; height:22px; border:none; border-radius:50%;
-    background:#1b2740; color:var(--gris); font-size:.7rem; cursor:pointer; line-height:1;
-    display:none; align-items:center; justify-content:center; transition:.2s;
+    position:absolute; right:10px; top:29px; width:24px; height:24px; border:none; border-radius:50%;
+    background:#eef1ee; color:var(--gris); font-size:.8rem; font-weight:700; cursor:pointer; display:none;
+    align-items:center; justify-content:center; line-height:1;
   }
-  .campo .borrar:hover{background:rgba(251,113,133,.18); color:var(--rosa);}
-  .swap{flex:0 0 auto;}
-  .swap button{
-    width:42px; height:42px; border:none; border-radius:11px; cursor:pointer;
-    font-size:1.05rem; color:#fff; background:linear-gradient(135deg,var(--azul),var(--violeta));
-    box-shadow:0 6px 16px rgba(59,130,246,.4); transition:.35s;
+  .campo .borrar:hover{background:#fde3e3; color:var(--rojo);}
+  .intercambio{display:flex; align-items:center; gap:9px; margin:2px 0;}
+  .intercambio .raya{flex:1; height:1px; background:repeating-linear-gradient(90deg,var(--borde) 0 5px,transparent 5px 10px);}
+  #btnSwap{
+    width:34px; height:34px; border-radius:12px; border:1.5px solid var(--borde); background:#fff;
+    font-size:1rem; cursor:pointer; transition:.25s; box-shadow:var(--sombra);
   }
-  .swap button:hover{transform:rotate(180deg); box-shadow:0 8px 22px rgba(139,92,246,.5);}
-  .swap button:active{transform:rotate(180deg) scale(.9);}
-  .filtros{display:flex; gap:8px; align-items:center; margin-top:12px; flex-wrap:wrap;}
+  #btnSwap:hover{transform:rotate(180deg); border-color:var(--amber); background:var(--ambar-claro);}
+  .filtros{display:flex; flex-wrap:wrap; gap:8px; margin-top:13px;}
   .chip{
-    display:inline-flex; align-items:center; gap:6px; font-size:.74rem; font-weight:500;
-    color:var(--gris); cursor:pointer; user-select:none;
-    padding:7px 13px; border:1.5px solid var(--borde); border-radius:40px; background:#0f1a30;
-    transition:.2s;
+    display:flex; align-items:center; gap:6px; padding:7px 11px; border-radius:999px; border:1.5px solid var(--borde);
+    background:#fff; font-size:.72rem; font-weight:600; color:var(--gris); cursor:pointer; transition:.2s;
   }
-  .chip:hover{border-color:var(--cielo); color:var(--cielo); transform:translateY(-1px);}
-  .chip input{display:none;}
-  .chip .marca{
-    width:15px; height:15px; border-radius:5px; border:1.5px solid var(--borde);
-    display:inline-flex; align-items:center; justify-content:center; font-size:.54rem; color:#fff;
-    transition:.2s;
-  }
-  .chip.activo{
-    background:linear-gradient(135deg,var(--azul),var(--violeta)); border-color:transparent; color:#fff;
-    box-shadow:0 6px 16px rgba(59,130,246,.4);
-  }
-  .chip.activo .marca{background:#fff; border-color:#fff; color:var(--azul);}
-  .acciones{margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;}
+  .chip input{accent-color:var(--teal);}
+  .chip.activo{border-color:var(--amber); background:var(--ambar-claro); color:#b45309;}
+  .acciones{display:grid; grid-template-columns:1fr auto; gap:8px; margin-top:14px;}
   .btn{
-    flex:1; min-width:130px; padding:11px 18px; border:none; border-radius:12px;
-    font-size:.88rem; font-weight:600; font-family:inherit; cursor:pointer; transition:.22s;
+    border:none; border-radius:13px; font-family:inherit; font-weight:700; cursor:pointer;
+    padding:11px 16px; font-size:.85rem; transition:.2s; display:flex; align-items:center; justify-content:center; gap:7px;
   }
-  .btn-buscar{
-    background:linear-gradient(135deg,var(--azul),var(--violeta));
-    color:#fff; box-shadow:0 8px 20px rgba(59,130,246,.45); position:relative; overflow:hidden;
-  }
-  .btn-buscar::after{
-    content:''; position:absolute; top:0; left:-130%; width:55%; height:100%;
-    background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent); transition:left .6s;
-  }
-  .btn-buscar:hover{transform:translateY(-2px); box-shadow:0 12px 28px rgba(139,92,246,.55);}
-  .btn-buscar:hover::after{left:160%;}
-  .btn-buscar:active{transform:scale(.97);}
-  .btn-limpiar{background:#182440; color:var(--gris); border:1px solid var(--borde);}
-  .btn-limpiar:hover{transform:translateY(-2px); background:#1e2b4a; color:var(--tinta);}
-  .btn-limpiar:active{transform:scale(.97);}
+  #btnBuscar{background:linear-gradient(135deg,#f59e0b,#f97316); color:#fff; box-shadow:0 8px 20px rgba(249,115,22,.35);}
+  #btnBuscar:hover{transform:translateY(-2px); box-shadow:0 12px 26px rgba(249,115,22,.45);}
+  #btnBuscar:active{transform:scale(.97);}
+  #btnLimpiar{background:#eef1ee; color:var(--gris); width:46px; font-size:1.05rem;}
+  #btnLimpiar:hover{background:#fde3e3; color:var(--rojo);}
 
-  /* resumen + tabla */
-  .resumen{
-    display:flex; align-items:center; justify-content:space-between; margin:18px 4px 10px; gap:10px; flex-wrap:wrap;
-  }
-  .cuenta{
-    font-size:.82rem; color:var(--gris); font-weight:500;
-    background:rgba(19,30,54,.8); border:1px solid var(--borde); border-radius:40px; padding:7px 15px;
-  }
-  .cuenta b{font-size:.95rem; font-weight:800; background:linear-gradient(90deg,#60a5fa,#a78bfa); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .resumen{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;}
+  .cuenta{font-size:.85rem; color:var(--gris); font-weight:500;}
+  .cuenta b{color:var(--teal-osc); font-size:1rem; font-weight:800;}
   .orden select{
-    font-family:inherit; font-size:.78rem; font-weight:500; color:var(--tinta);
-    padding:8px 12px; border:1px solid var(--borde); border-radius:10px; background:#0f1a30;
-    transition:box-shadow .2s;
+    padding:9px 12px; border-radius:12px; border:1.5px solid var(--borde); background:#fff;
+    font-family:inherit; font-size:.78rem; font-weight:600; color:var(--tinta); outline:none; cursor:pointer;
   }
-  .orden select:focus{outline:none; box-shadow:0 0 0 3px rgba(34,211,238,.15);}
+  .orden select:focus{border-color:var(--teal);}
+
+  .stats-res{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
+  .st{
+    background:var(--carta); border:1px solid var(--borde); border-radius:15px; padding:12px 15px;
+    box-shadow:var(--sombra); display:flex; align-items:center; gap:11px;
+  }
+  .st .st-ic{width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex:none;}
+  .st .st-lb{font-size:.65rem; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:var(--gris);}
+  .st .st-v{font-size:1.02rem; font-weight:800; color:var(--tinta);}
+  .st.baja .st-ic{background:var(--ambar-claro);}
+  .st.alta .st-ic{background:#fde8e8;}
+  .st.prom .st-ic{background:var(--teal-claro);}
+
+  .ambit{display:flex; flex-wrap:wrap; gap:8px;}
+  .ambit .tag{padding:7px 13px; border-radius:999px; background:#fff; border:1px solid var(--borde); font-size:.74rem; font-weight:600; color:var(--gris); box-shadow:var(--sombra);}
+  .ambit .tag b{color:var(--tinta);}
+  .ambit .tag.inter{background:var(--teal-claro); border-color:#cde7e0; color:var(--teal-osc);}
+  .ambit .tag.inter b{color:var(--teal-osc);}
+  .ambit .tag.intra{background:var(--ambar-claro); border-color:#f3d9a8; color:#b45309;}
+  .ambit .tag.intra b{color:#b45309;}
+
+  .aviso-scroll{display:none; text-align:center; font-size:.72rem; color:var(--amber); font-weight:600; background:var(--ambar-claro); border:1px dashed #f3cd82; border-radius:10px; padding:6px;}
+  @media(max-width:620px){.aviso-scroll{display:block;}}
+
+  /* ── tabla (generada por el script) ──────────────── */
   .tabla-caja{
-    background:rgba(15,26,48,.92); border-radius:16px; overflow:auto; max-height:72vh;
-    -webkit-overflow-scrolling:touch; box-shadow:0 12px 36px rgba(0,0,0,.4);
-    animation:subir .5s ease both;
+    background:var(--carta); border:1px solid var(--borde); border-radius:18px;
+    box-shadow:var(--sombra); overflow:auto; max-height:62vh;
   }
-  table{width:100%; border-collapse:collapse;}
+  .tabla-caja::-webkit-scrollbar-thumb{background:#cfe0db;}
+  table{width:100%; border-collapse:collapse; min-width:680px; font-size:.82rem;}
   thead th{
-    position:sticky; top:0; z-index:2;
-    background:linear-gradient(135deg,#152449,#1e3a7a); color:#cdddff; text-align:left;
-    font-size:.62rem; font-weight:700; text-transform:uppercase; letter-spacing:.9px;
-    padding:10px 13px; white-space:nowrap;
+    position:sticky; top:0; z-index:5; text-align:left; padding:12px 14px;
+    background:linear-gradient(135deg,#0f9488,#0ea0a6); color:#fff;
+    font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.7px; white-space:nowrap;
   }
-  tbody td{padding:9px 13px; border-bottom:1px solid #1c2a47; vertical-align:middle; font-size:.84rem;}
-  tbody tr{animation:fila .4s ease backwards;}
-  tbody tr:nth-child(even){background:rgba(255,255,255,.025);}
-  tbody tr:last-child td{border-bottom:none;}
-  tbody tr:hover{background:rgba(59,130,246,.1);}
-  @keyframes fila{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  tbody td{padding:10px 14px; border-bottom:1px solid #f0ecdf; vertical-align:middle;}
+  tbody tr:nth-child(even){background:#fbfaf5;}
+  tbody tr:hover{background:var(--teal-claro);}
+  tbody tr{animation:filain .45s ease backwards;}
+  @keyframes filain{from{opacity:0; transform:translateY(6px);}to{opacity:1; transform:none;}}
+  .ruta{display:flex; align-items:center; gap:10px;}
+  .ruta .ico{width:34px; height:34px; border-radius:10px; background:var(--teal-claro); display:flex; align-items:center; justify-content:center; font-size:1rem; flex:none;}
+  .ruta .dest{display:flex; flex-direction:column; gap:1px; line-height:1.25;}
+  .ruta .nom{font-weight:700; color:var(--tinta);}
+  .ruta .sub{font-size:.68rem; color:var(--gris);}
+  .badge{
+    display:inline-flex; align-items:center; gap:4px; padding:4px 9px; border-radius:999px;
+    font-size:.64rem; font-weight:700; text-transform:uppercase; letter-spacing:.4px; white-space:nowrap;
+  }
+  .badge.badge-inter{background:var(--teal-claro); color:var(--teal-osc);}
+  .badge.badge-intra{background:var(--ambar-claro); color:#b45309;}
+  .precio{font-weight:800; color:var(--teal-osc); font-size:.9rem; white-space:nowrap; line-height:1.2;}
+  .precio .moneda{color:var(--amber);}
+  .precio .subp{font-size:.62rem; color:var(--gris); font-weight:600; margin-top:2px;}
+  .precio .subp .moneda{color:var(--gris);}
+  .vender-td{white-space:nowrap; text-align:right;}
+  .btn-vender{
+    border:none; border-radius:10px; padding:7px 14px; font-family:inherit; font-size:.72rem; font-weight:700;
+    background:linear-gradient(135deg,#f59e0b,#f97316); color:#fff; cursor:pointer; transition:.2s; white-space:nowrap;
+  }
+  .btn-vender:hover{transform:translateY(-2px); box-shadow:0 8px 18px rgba(249,115,22,.4);}
+  .btn-vender:active{transform:scale(.96);}
   .cargar-mas{
-    display:block; margin:14px auto 0; padding:10px 22px; border:none; border-radius:12px; cursor:pointer;
-    font-family:inherit; font-size:.84rem; font-weight:600; color:#fff; letter-spacing:.3px;
-    background:linear-gradient(135deg,var(--azul),var(--violeta));
-    box-shadow:0 6px 18px rgba(59,130,246,.4); transition:.2s;
+    display:block; margin:14px auto 6px; border:none; border-radius:13px; padding:11px 26px;
+    background:#fff; border:1.5px solid var(--borde); font-family:inherit; font-size:.8rem; font-weight:700; color:var(--teal-osc);
+    cursor:pointer; transition:.2s; box-shadow:var(--sombra);
   }
-  .cargar-mas:hover{transform:translateY(-2px); box-shadow:0 10px 24px rgba(139,92,246,.5);}
-  .cargar-mas:active{transform:scale(.97);}
-  .ruta{display:flex; align-items:center; gap:9px;}
-  .ruta .ico{
-    flex:0 0 auto; width:30px; height:30px; border-radius:9px; display:flex; align-items:center;
-    justify-content:center; font-size:.82rem; background:rgba(59,130,246,.12);
-  }
-  .ruta .dest{display:flex; flex-direction:column; gap:1px; min-width:0;}
-  .ruta .nom{font-weight:600; color:var(--tinta); white-space:nowrap; font-size:.85rem;}
-  .ruta .sub{font-size:.64rem; color:var(--gris2); font-weight:500; letter-spacing:.2px; white-space:nowrap;}
-  .badge{display:inline-block; font-size:.6rem; font-weight:700; padding:4px 9px; border-radius:30px; white-space:nowrap; letter-spacing:.3px;}
-  .badge-inter{background:linear-gradient(135deg,rgba(59,130,246,.2),rgba(139,92,246,.2)); color:#bfd9ff;}
-  .badge-intra{background:linear-gradient(135deg,rgba(52,211,153,.18),rgba(34,211,238,.18)); color:#9df3d5;}
-  .precio{font-weight:800; font-size:.88rem; white-space:nowrap; color:#fff; display:flex; align-items:baseline; gap:2px;}
-  .precio .moneda{font-size:.66rem; font-weight:700; color:var(--cielo);}
-  .precio .subp{display:flex; align-items:baseline; gap:2px; font-size:.66rem; font-weight:600; color:var(--gris2); margin-top:2px;}
-  .precio .subp .moneda{color:var(--menta); font-size:.6rem;}
-  .precio .pref-solo{flex-direction:column;}
+  .cargar-mas:hover{background:var(--teal-claro); border-color:var(--teal); transform:translateY(-2px);}
 
   .vacio{
-    text-align:center; padding:40px 20px; color:var(--gris);
-    background:rgba(19,30,54,.85); border:1.5px dashed var(--borde); border-radius:16px;
-    margin-top:10px; animation:subir .4s ease both;
+    background:var(--carta); border:1.5px dashed var(--borde); border-radius:18px; padding:38px 20px;
+    text-align:center; color:var(--gris); font-size:.88rem; box-shadow:var(--sombra);
   }
-  .vacio .big{font-size:2rem; display:inline-block; animation:rebote 2.4s ease-in-out infinite;}
-  .vacio .txt{font-weight:500; font-size:.92rem; color:#d4ddf0;}
-  .vacio .sub{font-size:.76rem; color:var(--gris2); margin-top:5px;}
-  @keyframes rebote{0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);}}
-  .foot{text-align:center; font-size:.7rem; color:var(--gris2); margin-top:26px; padding:0 10px; line-height:1.6;}
-  mark{background:linear-gradient(90deg,rgba(251,191,36,.35),rgba(251,113,133,.35)); color:#fff; border-radius:3px; padding:0 2px;}
+  .vacio .big{font-size:2.4rem; margin-bottom:8px;}
+  .vacio .txt{font-weight:600; color:var(--tinta);}
+  .vacio .sub{font-size:.76rem; margin-top:6px; color:var(--gris);}
 
-  /* resumen estadístico */
-  .stats-res{
-    display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:0 4px 10px;
-  }
-  .stats-res .st{
-    background:rgba(19,30,54,.85); border:1px solid var(--borde); border-radius:13px;
-    padding:9px 12px; box-shadow:0 5px 14px rgba(0,0,0,.25); animation:subir .4s ease both;
-  }
-  .stats-res .st .st-eti{font-size:.58rem; font-weight:700; text-transform:uppercase; letter-spacing:.8px; color:var(--gris2);}
-  .stats-res .st .st-val{font-size:.98rem; font-weight:800; margin-top:2px; display:flex; align-items:baseline; gap:2px;}
-  .stats-res .st .st-val .moneda{font-size:.6rem; font-weight:700; color:var(--gris2);}
-  .st-baja .st-val{color:var(--menta);}
-  .st-alta .st-val{color:var(--rosa);}
-  .st-prom .st-val{background:linear-gradient(90deg,#60a5fa,#a78bfa); -webkit-background-clip:text; background-clip:text; color:transparent;}
-  .ambit{
-    display:flex; gap:6px; flex-wrap:wrap; margin:0 4px 10px; align-items:center;
-  }
-  .ambit .tag{
-    font-size:.66rem; font-weight:600; padding:5px 10px; border-radius:30px;
-    background:#0f1a30; border:1px solid var(--borde); color:var(--gris);
-  }
-  .ambit .tag b{color:var(--tinta);}
-  .ambit .tag.inter b{color:#a5b8f8;}
-  .ambit .tag.intra b{color:#7be3c3;}
-  .aviso-scroll{
-    display:none; text-align:right; font-size:.64rem; color:var(--gris2);
-    margin:0 4px 5px; font-weight:500;
-  }
+  mark{background:linear-gradient(120deg,#fde68a,#fcd34d); color:#92400e; padding:0 2px; border-radius:4px;}
 
-  /* pestañas */
-  .hidden{display:none !important;}
-  .tabs{
-    display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;
+  /* ── ventas ─────────────────────────────────────── */
+  .v-titulo{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;}
+  .v-titulo h2{font-size:1.05rem; font-weight:800; display:flex; align-items:center; gap:9px;}
+  .v-titulo h2 span{color:var(--teal);}
+  .v-fecha{font-size:.74rem; color:var(--gris); font-weight:600; background:#fff; border:1px solid var(--borde); padding:6px 12px; border-radius:999px; box-shadow:var(--sombra);}
+  .ventas-info{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
+  .vi{
+    background:var(--carta); border:1px solid var(--borde); border-radius:15px; padding:13px 15px;
+    box-shadow:var(--sombra); display:flex; align-items:center; gap:11px;
   }
-  .tab{
-    font-family:inherit; font-size:.84rem; font-weight:600; cursor:pointer; color:var(--gris);
-    background:#0f1a30; border:1.5px solid var(--borde); border-radius:40px; padding:10px 20px;
-    display:inline-flex; align-items:center; gap:6px; transition:.22s;
+  .vi .vi-ic{width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:1.05rem; flex:none;}
+  .vi .vi-ic.i1{background:var(--teal-claro);} .vi .vi-ic.i2{background:var(--ambar-claro);} .vi .vi-ic.i3{background:#efe9fb;}
+  .vi .vi-lb{font-size:.64rem; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:var(--gris);}
+  .vi .vi-v{font-size:1.05rem; font-weight:800;}
+  .vi-acciones{display:flex; gap:8px; flex-wrap:wrap;}
+  #btnVaciarVentas{
+    display:none; border:none; border-radius:12px; padding:10px 15px; background:#fff;
+    border:1.5px solid #f3c8c8; color:var(--rojo); font-family:inherit; font-size:.76rem; font-weight:700; cursor:pointer; transition:.2s;
   }
-  .tab:hover{border-color:var(--cielo); color:var(--cielo); transform:translateY(-1px);}
-  .tab.activo{
-    background:linear-gradient(135deg,var(--azul),var(--violeta)); color:#fff; border-color:transparent;
-    box-shadow:0 8px 22px rgba(59,130,246,.45);
+  #btnVaciarVentas:hover{background:var(--rojo); color:#fff; border-color:var(--rojo);}
+  #btnExportar{
+    border:none; border-radius:12px; padding:10px 15px; font-family:inherit; font-size:.76rem; font-weight:700; cursor:pointer;
+    background:linear-gradient(135deg,#0f9488,#0ea0a6); color:#fff; transition:.2s;
   }
-  .tab-badge{
-    background:rgba(255,255,255,.28); border-radius:30px; padding:1px 9px; font-size:.74rem;
-    font-weight:700;
-  }
+  #btnExportar:hover{transform:translateY(-2px); box-shadow:0 10px 20px rgba(15,148,136,.4);}
 
-  /* panel ventas */
-  .ventas-resumen{
-    display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:12px;
-  }
-  .ventas-resumen .vr{
-    display:flex; align-items:center; gap:11px;
-    background:rgba(19,30,54,.88); border:1px solid var(--borde); border-radius:16px;
-    padding:13px 14px; box-shadow:0 6px 18px rgba(0,0,0,.3); animation:subir .4s ease both;
-  }
-  .ventas-resumen .vr .vr-ico{
-    flex:0 0 auto; width:38px; height:38px; border-radius:12px; display:flex; align-items:center;
-    justify-content:center; font-size:1.05rem; background:rgba(59,130,246,.14);
-  }
-  .ventas-resumen .vr-total .vr-ico{background:rgba(52,211,153,.14);}
-  .ventas-resumen .vr .vr-tx{min-width:0;}
-  .ventas-resumen .vr .vr-eti{font-size:.6rem; font-weight:700; text-transform:uppercase; letter-spacing:.9px; color:var(--gris2);}
-  .ventas-resumen .vr .vr-val{font-size:1.2rem; font-weight:800; margin-top:2px; display:flex; align-items:baseline; gap:3px; white-space:nowrap; color:#fff;}
-  .ventas-resumen .vr .vr-val .moneda{font-size:.68rem; color:var(--gris2);}
-  .vr-total .vr-val{background:linear-gradient(90deg,#60a5fa,#a78bfa); -webkit-background-clip:text; background-clip:text; color:transparent;}
-  .ventas-acciones{display:flex; gap:10px; margin-bottom:14px; flex-wrap:wrap;}
-  .ventas-acciones .btn{flex:1; min-width:150px; padding:11px 16px; font-size:.85rem; border-radius:12px;}
-  .ventas-info{
-    display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
-    font-size:.72rem; color:var(--gris2); margin:0 4px 10px;
-  }
-  .ventas-info b{color:var(--tinta);}
-  .lista-v{
-    background:rgba(15,26,48,.92); border-radius:16px; overflow:hidden;
-    box-shadow:0 8px 24px rgba(0,0,0,.3); margin-bottom:14px;
-  }
+  .lista-v{display:flex; flex-direction:column; gap:9px;}
   .l-v-item{
-    display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid #1c2a47;
-    animation:fila .4s ease backwards;
+    display:grid; grid-template-columns:auto 1fr auto auto; gap:12px; align-items:center;
+    background:#fff; border:1px solid var(--borde); border-radius:14px; padding:12px 14px;
+    box-shadow:var(--sombra); animation:filain .4s ease backwards;
   }
-  .l-v-item:last-child{border-bottom:none;}
-  .l-v-item:hover{background:rgba(59,130,246,.08);}
-  .l-v-hora{
-    flex:0 0 auto; font-size:.68rem; font-weight:600; color:var(--gris);
-    background:#182440; border:1px solid var(--borde); border-radius:8px; padding:5px 8px; text-align:center; line-height:1.15;
-  }
-  .l-v-dest{flex:1 1 auto; min-width:0;}
-  .l-v-ruta{font-size:.84rem; font-weight:600; color:var(--tinta); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-  .l-v-sub{font-size:.68rem; color:var(--gris2);}
-  .l-v-monto{flex:0 0 auto; text-align:right;}
-  .l-v-total{font-size:.9rem; font-weight:800; color:#fff;}
-  .l-v-meta{font-size:.66rem; color:var(--gris2);}
+  .l-v-hora{font-size:.72rem; font-weight:700; color:var(--teal-osc); background:var(--teal-claro); padding:5px 9px; border-radius:9px; text-align:center; white-space:nowrap;}
+  .l-v-dest{min-width:0;}
+  .l-v-ruta{font-size:.82rem; font-weight:700;}
+  .l-v-sub{font-size:.72rem; color:var(--gris); margin-top:2px;}
+  .l-v-monto{text-align:right; white-space:nowrap;}
+  .l-v-total{font-size:1rem; font-weight:800; color:var(--teal-osc);}
+  .l-v-meta{font-size:.68rem; color:var(--gris); margin-top:2px;}
   .l-v-del{
-    flex:0 0 auto; width:26px; height:26px; border:none; border-radius:50%; cursor:pointer;
-    background:#1b2740; color:var(--gris); font-size:.75rem; line-height:1; transition:.2s;
+    border:none; width:30px; height:30px; border-radius:10px; background:#f4f2ea; color:var(--gris);
+    font-size:.95rem; cursor:pointer; transition:.2s; line-height:1;
   }
-  .l-v-del:hover{background:rgba(251,113,133,.2); color:var(--rosa); transform:scale(1.1);}
-  .btn-exportar{
-    background:linear-gradient(135deg,#0e7490,#06b6d4); color:#fff;
-    box-shadow:0 6px 16px rgba(34,211,238,.3);
-  }
-  .btn-exportar:hover{transform:translateY(-2px); box-shadow:0 10px 24px rgba(34,211,238,.42);}
-  .btn-exportar:active{transform:scale(.97);}
+  .l-v-del:hover{background:#fde3e3; color:var(--rojo);}
+  .ventas-vacio{text-align:center; padding:34px 16px; color:var(--gris); background:var(--carta); border:1.5px dashed var(--borde); border-radius:16px; font-size:.86rem; box-shadow:var(--sombra);}
 
-  /* sección de detalle al pie */
-  .detalles{
-    display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:26px;
+  /* ── modal ──────────────────────────────────────── */
+  .modal-caja{
+    position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; padding:18px;
+    background:rgba(32,48,63,.55); backdrop-filter:blur(3px);
   }
-  .det-carta{
-    background:rgba(19,30,54,.8); border:1px solid var(--borde); border-radius:16px;
-    padding:16px; box-shadow:0 5px 16px rgba(0,0,0,.25);
+  .modal{
+    background:#fff; border-radius:20px; box-shadow:0 24px 60px rgba(32,48,63,.4);
+    width:100%; max-width:430px; max-height:90vh; overflow:auto; padding:22px;
   }
-  .det-carta h3{font-size:.84rem; font-weight:700; margin-bottom:8px; display:flex; align-items:center; gap:7px; color:#fff;}
+  .modal h3{font-size:1rem; font-weight:800; display:flex; align-items:center; gap:9px; margin-bottom:4px;}
+  .modal .m-sub{font-size:.76rem; color:var(--gris); margin-bottom:15px;}
+  .m-ruta{
+    background:linear-gradient(135deg,#e8f6f2,#f3fbf9); border:1px solid #cde7e0; border-radius:13px;
+    padding:11px 13px; margin-bottom:15px; font-size:.85rem; font-weight:700; line-height:1.5;
+  }
+  .m-ruta .mrt{font-size:.7rem; color:var(--gris); font-weight:600;}
+  .m-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .m-campo{display:flex; flex-direction:column; gap:4px;}
+  .m-campo.full{grid-column:1/-1;}
+  .m-campo label{font-size:.66rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--gris);}
+  .m-campo input{
+    padding:10px 12px; border:1.5px solid var(--borde); border-radius:11px; font-family:inherit; font-size:.9rem;
+    color:var(--tinta); outline:none; background:#fbfaf6; transition:.2s;
+  }
+  .m-campo input:focus{border-color:var(--teal); box-shadow:0 0 0 3px rgba(15,148,136,.13); background:#fff;}
+  .m-total{
+    margin-top:14px; display:flex; align-items:center; justify-content:space-between;
+    background:linear-gradient(135deg,#0f9488,#0ea0a6); color:#fff; border-radius:13px; padding:12px 15px;
+  }
+  .m-total .mt-lb{font-size:.7rem; font-weight:600; text-transform:uppercase; letter-spacing:.6px; opacity:.85;}
+  .m-total .mt-v{font-size:1.35rem; font-weight:900;}
+  .m-acc{display:flex; gap:9px; margin-top:16px;}
+  #mvConfirmar{
+    flex:1; border:none; border-radius:12px; padding:12px; font-family:inherit; font-size:.85rem; font-weight:800;
+    background:linear-gradient(135deg,#f59e0b,#f97316); color:#fff; cursor:pointer; transition:.2s;
+  }
+  #mvConfirmar:hover{transform:translateY(-2px); box-shadow:0 10px 22px rgba(249,115,22,.4);}
+  #mvCancelar{
+    border:none; border-radius:12px; padding:12px 18px; background:#eef1ee; color:var(--gris);
+    font-family:inherit; font-size:.82rem; font-weight:700; cursor:pointer; transition:.2s;
+  }
+  #mvCancelar:hover{background:#fde3e3; color:var(--rojo);}
+
+  /* toast */
+  .toast{
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(80px); z-index:70;
+    background:#20303f; color:#fff; padding:11px 20px; border-radius:999px; font-size:.8rem; font-weight:600;
+    box-shadow:0 14px 34px rgba(32,48,63,.4); opacity:0; transition:.3s; pointer-events:none; white-space:nowrap;
+    display:flex;
+  }
+  .toast.hidden{display:flex; opacity:0; transform:translateX(-50%) translateY(80px);}
+
+  /* detalle al pie */
+  .detalles{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:4px;}
+  .det-carta{background:var(--carta); border:1px solid var(--borde); border-radius:16px; padding:16px; box-shadow:var(--sombra);}
+  .det-carta h3{font-size:.8rem; font-weight:700; margin-bottom:8px; display:flex; align-items:center; gap:7px; color:var(--teal-osc);}
   .det-carta p{font-size:.76rem; color:var(--gris); line-height:1.6;}
   .det-carta ol{margin-left:16px; font-size:.76rem; color:var(--gris); line-height:1.8;}
   .det-carta b{color:var(--tinta);}
 
-  /* modal */
-  .modal{
-    position:fixed; inset:0; z-index:50; background:rgba(4,8,18,.72); backdrop-filter:blur(6px);
-    display:flex; align-items:center; justify-content:center; padding:16px; animation:op .2s ease;
-  }
-  @keyframes op{from{opacity:0;} to{opacity:1;}}
-  .modal-box{
-    background:#111c36; border:1px solid #273a63; border-radius:20px; width:100%; max-width:430px; padding:22px;
-    box-shadow:0 30px 70px rgba(0,0,0,.55); animation:modal-in .3s ease;
-  }
-  @keyframes modal-in{from{opacity:0; transform:scale(.94) translateY(14px);} to{opacity:1; transform:none;}}
-  .modal-box h3{font-size:1.05rem; font-weight:800; margin-bottom:14px; display:flex; align-items:center; gap:8px; color:#fff;}
-  .mv-ruta{
-    display:flex; align-items:center; gap:10px; background:#0d1629; border-radius:14px;
-    padding:14px; margin-bottom:16px; border:1px solid #223452;
-  }
-  .mv-punto{display:flex; align-items:center; gap:9px; flex:1; min-width:0;}
-  .mv-ico{font-size:1rem;}
-  .mv-lbl{font-size:.6rem; font-weight:700; text-transform:uppercase; letter-spacing:.9px; color:var(--gris2);}
-  .mv-nom{font-size:.86rem; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-  .mv-flecha{font-size:1.1rem; color:var(--cielo);}
-  .mv-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
-  .mv-cliente{grid-column:1 / -1;}
-  .mv-campo label{display:block; font-size:.62rem; font-weight:700; text-transform:uppercase; letter-spacing:.9px; color:var(--gris2); margin-bottom:6px;}
-  .mv-campo input{
-    width:100%; padding:10px 12px; font-size:.9rem; font-family:inherit; color:var(--tinta);
-    border:1.5px solid var(--borde); border-radius:10px; background:#0d1629; transition:.2s;
-  }
-  .mv-campo input:focus{outline:none; border-color:var(--cielo); box-shadow:0 0 0 3px rgba(34,211,238,.15); background:#0f1a32;}
-  .mv-total{
-    display:flex; align-items:center; justify-content:space-between; margin:16px 0;
-    font-size:.9rem; color:var(--gris); font-weight:500;
-  }
-  .mv-total b{font-size:1.35rem; font-weight:800; color:#fff; display:flex; align-items:baseline; gap:3px;}
-  .mv-total .moneda{font-size:.72rem; color:var(--gris2);}
-  .mv-acciones{display:flex; gap:10px;}
-  .mv-acciones .btn{min-width:0; flex:1; padding:12px 14px; font-size:.85rem;}
+  footer{max-width:1220px; margin:22px auto; padding:0 16px; color:var(--gris2); font-size:.7rem; text-align:center;}
 
-  /* toast */
-  .toast{
-    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
-    background:#16233f; color:#e8eefc; border:1px solid #2b3f6a; padding:12px 22px; border-radius:40px;
-    font-size:.85rem; font-weight:600; z-index:60; box-shadow:0 12px 34px rgba(0,0,0,.5);
-    animation:toast-in .3s ease;
-  }
-  @keyframes toast-in{from{opacity:0; transform:translate(-50%,16px);} to{opacity:1; transform:translate(-50%,0);}}
-
-  @media (max-width:640px){
-    .hero{padding:24px 14px 64px; border-radius:0 0 26px 26px;}
-    .stat{min-width:84px; padding:6px 12px;}
-    .swap{width:100%; display:flex; justify-content:center;}
-    .swap button{width:100%;}
-    .acciones .btn{min-width:110px;}
-    .resumen{flex-direction:column; align-items:stretch;}
-    .cuenta{text-align:center;}
-    .orden select{width:100%;}
-    .stats-res{grid-template-columns:repeat(3,1fr); gap:6px;}
-    .stats-res .st{padding:8px 8px;}
+  @media(max-width:900px){
+    .panel{grid-template-columns:1fr;}
+    .sidebar{position:static; order:1;}
+    .main{order:2;}
+    .stats-res{grid-template-columns:repeat(3,1fr);}
+    .ventas-info{grid-template-columns:repeat(3,1fr);}
     .detalles{grid-template-columns:1fr;}
-    table{min-width:560px;}
-    thead th, tbody td{padding:9px 11px; font-size:.8rem;}
-    .ruta .ico{display:none;}
-    .ruta .sub{display:none;}
-    .badge{font-size:.58rem; padding:3px 8px;}
-    .precio{font-size:.82rem;}
-    .aviso-scroll{display:block;}
-    .ventas-resumen{grid-template-columns:repeat(3,1fr); gap:6px;}
-    .ventas-resumen .vr{padding:9px 9px; gap:8px;}
-    .ventas-resumen .vr .vr-ico{width:30px; height:30px; font-size:.9rem; border-radius:9px;}
-    .ventas-resumen .vr .vr-val{font-size:.95rem;}
-    .hero-chip{font-size:.64rem; padding:5px 11px;}
-    .ventas-acciones .btn{min-width:130px;}
-    .tab{padding:8px 14px; font-size:.78rem;}
-    .modal-box{padding:18px;}
-    .mv-grid{grid-template-columns:1fr;}
-    .mv-cliente{grid-column:auto;}
   }
-  @media (prefers-reduced-motion:reduce){
-    *,*::before,*::after{animation:none !important; transition:none !important;}
+  @media(max-width:620px){
+    .stats-res{grid-template-columns:1fr;}
+    .ventas-info{grid-template-columns:1fr;}
+    .m-grid{grid-template-columns:1fr;}
+    body{font-size:14px;}
+    .l-v-item{grid-template-columns:auto 1fr auto;}
+    .l-v-monto{grid-column:2/4;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{transition:none !important; animation:none !important;}
   }
 </style>
 </head>
 <body>
 
-<header class="hero">
-  <span class="bus">🚌</span>
-  <div class="contenido">
-    <div class="hero-top">
-      <span class="hero-chip">🕒 <b id="heroFecha">…</b></span>
-      <span class="hero-chip verde">🧾 Ventas de hoy: <b id="heroVentas">$0,00</b></span>
-    </div>
-    <span class="pill">Agencia Nacional de Tránsito · Anexo 1</span>
-    <h1>Tarifas de Transporte Terrestre <span class="resaltado">Ecuador 2026</span></h1>
-    <p>Consolidado nacional de rutas inter e intraprovinciales de pasajeros. Busca tu ruta, consulta la tarifa oficial y registra tus ventas del día.</p>
-    <div class="stats">
-      <div class="stat"><div class="num" id="statRutas">0</div><div class="eti">Rutas</div></div>
-      <div class="stat"><div class="num" id="statProv">0</div><div class="eti">Provincias</div></div>
-      <div class="stat"><div class="num" id="statCiud">0</div><div class="eti">Ciudades</div></div>
-    </div>
+<header class="barra">
+  <div class="barra-izq">
+    <span class="logo"><span class="burb">🚌</span><span><b>RutaEC</b><span class="sub">Tarifas de transporte · Ecuador 2026</span></span></span>
+  </div>
+  <div class="barra-der">
+    <span class="barra-chip"><span class="punto"></span>🕒 <b id="heroFecha"></b></span>
+    <span class="barra-chip">🧾 Ventas de hoy: <b id="heroVentas">$0,00</b></span>
   </div>
 </header>
 
-<div class="wrap">
-  <div class="tabs">
-    <button class="tab activo" data-tab="buscar">🚌 &nbsp;Buscar rutas</button>
-    <button class="tab" data-tab="ventas">🧾 &nbsp;Ventas del día <span class="tab-badge" id="badgeVentas">0</span></button>
-  </div>
+<div class="panel">
 
-  <div id="tabBuscar">
-  <div class="buscador">
-    <div class="saludo">Busca tu ruta y mira la <b>tarifa oficial</b></div>
-    <div class="campos">
-      <div class="campo">
-        <label>Desde</label>
-        <span class="icon">📍</span>
-        <input id="origen" type="text" placeholder="Ciudad, cantón o provincia de salida" list="lista" autocomplete="off">
-        <button class="borrar" data-limpia="origen" title="Limpiar">✕</button>
-      </div>
-      <div class="swap"><button id="btnSwap" title="Invertir ruta" aria-label="Invertir">⇄</button></div>
-      <div class="campo">
-        <label>Hasta</label>
-        <span class="icon">🏁</span>
-        <input id="destino" type="text" placeholder="Ciudad, cantón o provincia de llegada" list="lista" autocomplete="off">
-        <button class="borrar" data-limpia="destino" title="Limpiar">✕</button>
+  <aside class="sidebar">
+    <div class="tarjeta">
+      <div class="estad-tit">📊 Consolidado nacional</div>
+      <div class="estad-grid">
+        <div class="e"><div class="e-num" id="statRutas">0</div><div class="e-tag">Rutas</div></div>
+        <div class="e"><div class="e-num" id="statProv">0</div><div class="e-tag">Provincias</div></div>
+        <div class="e"><div class="e-num" id="statCiud">0</div><div class="e-tag">Ciudades</div></div>
       </div>
     </div>
-    <datalist id="lista"></datalist>
-    <div class="filtros">
-      <label class="chip" id="chipDir"><input type="checkbox" id="chkDir"><span class="marca">✓</span> Ambas direcciones</label>
-      <label class="chip" id="chipExact"><input type="checkbox" id="chkExact"><span class="marca">✓</span> Coincidencia exacta</label>
-    </div>
-    <div class="acciones">
-      <button class="btn btn-buscar" id="btnBuscar">🔍 &nbsp;Buscar ruta</button>
-      <button class="btn btn-limpiar" id="btnLimpiar">↺ &nbsp;Limpiar</button>
-    </div>
-  </div>
 
-  <div class="resumen">
-    <div class="cuenta" id="cuenta"></div>
-    <div class="orden">
-      <select id="orden">
-        <option value="precio">Tarifa (menor a mayor)</option>
-        <option value="precio_desc">Tarifa (mayor a menor)</option>
-        <option value="origen">Por origen</option>
-        <option value="destino">Por destino</option>
-      </select>
+    <div class="tabs-col">
+      <button class="tab activo" data-tab="buscar">🔍 Buscar rutas</button>
+      <button class="tab" data-tab="ventas">🧾 Ventas del día <span class="tab-badge" id="badgeVentas">0</span></button>
     </div>
-  </div>
 
-  <div class="stats-res" id="statsRes" style="display:none">
-    <div class="st st-baja">
-      <div class="st-eti">Tarifa más baja</div>
-      <div class="st-val"><span class="moneda">$</span><span id="stBaja">–</span></div>
+    <div class="tarjeta">
+      <div class="saludo">Consulta la <b>tarifa oficial</b> 🇪🇨</div>
+      <div class="campos">
+        <div class="campo">
+          <label>Desde</label>
+          <span class="ic">🟢</span>
+          <input id="origen" list="lista" placeholder="Ciudad, cantón o provincia" autocomplete="off">
+          <button class="borrar" data-limpia="origen">✕</button>
+        </div>
+        <div class="intercambio"><span class="raya"></span><button id="btnSwap" title="Invertir">⇄</button><span class="raya"></span></div>
+        <div class="campo">
+          <label>Hasta</label>
+          <span class="ic">🔴</span>
+          <input id="destino" list="lista" placeholder="Ciudad, cantón o provincia" autocomplete="off">
+          <button class="borrar" data-limpia="destino">✕</button>
+        </div>
+        <datalist id="lista"></datalist>
+      </div>
+      <div class="filtros">
+        <label class="chip" id="chipDir"><input type="checkbox" id="chkDir"> Ambas direcciones</label>
+        <label class="chip" id="chipExact"><input type="checkbox" id="chkExact"> Exacta</label>
+      </div>
+      <div class="acciones">
+        <button id="btnBuscar" class="btn">🔍 Buscar</button>
+        <button id="btnLimpiar" class="btn" title="Limpiar">✕</button>
+      </div>
     </div>
-    <div class="st st-alta">
-      <div class="st-eti">Tarifa más alta</div>
-      <div class="st-val"><span class="moneda">$</span><span id="stAlta">–</span></div>
-    </div>
-    <div class="st st-prom">
-      <div class="st-eti">Tarifa promedio</div>
-      <div class="st-val"><span class="moneda">$</span><span id="stProm">–</span></div>
-    </div>
-  </div>
-  <div class="ambit" id="ambitRes"></div>
+  </aside>
 
-  <div class="aviso-scroll">Desliza la tabla para ver ámbito y tarifa →</div>
-  <div id="tabla"></div>
-  <div class="vacio" id="vacio">
-    <div class="big">🛤️</div>
-    <div class="txt">Escribe un origen y un destino para ver las tarifas.</div>
-    <div class="sub">Ejemplo: CUENCA → GIRÓN, o QUITO → GUAYAQUIL</div>
-  </div>
-  </div>
+  <main class="main">
 
-  <section id="panelVentas" class="hidden">
-    <div class="ventas-resumen">
-      <div class="vr vr-total">
-        <div class="vr-ico">💰</div>
-        <div class="vr-tx">
-          <div class="vr-eti">Total del día</div>
-          <div class="vr-val"><span class="moneda">$</span><span id="totDia">0,00</span></div>
+    <div id="tabBuscar">
+      <div class="resumen tarjeta">
+        <div class="cuenta" id="cuenta"></div>
+        <div class="orden">
+          <select id="orden">
+            <option value="precio">Tarifa menor → mayor</option>
+            <option value="precio_desc">Tarifa mayor → menor</option>
+            <option value="origen">Por origen</option>
+            <option value="destino">Por destino</option>
+          </select>
         </div>
       </div>
-      <div class="vr">
-        <div class="vr-ico">🧾</div>
-        <div class="vr-tx">
-          <div class="vr-eti">Ventas</div>
-          <div class="vr-val" id="numVentas">0</div>
-        </div>
+      <div class="stats-res" id="statsRes" style="display:none">
+        <div class="st baja"><span class="st-ic">📉</span><span><div class="st-lb">Tarifa más baja</div><div class="st-v" id="stBaja">—</div></span></div>
+        <div class="st alta"><span class="st-ic">📈</span><span><div class="st-lb">Tarifa más alta</div><div class="st-v" id="stAlta">—</div></span></div>
+        <div class="st prom"><span class="st-ic">⚖️</span><span><div class="st-lb">Tarifa promedio</div><div class="st-v" id="stProm">—</div></span></div>
       </div>
-      <div class="vr">
-        <div class="vr-ico">🎟️</div>
-        <div class="vr-tx">
-          <div class="vr-eti">Pasajes</div>
-          <div class="vr-val" id="numPasajes">0</div>
-        </div>
+      <div class="ambit" id="ambitRes"></div>
+      <div class="aviso-scroll">↔️ Desliza la tabla hacia los lados para ver la tarifa y la venta</div>
+      <div id="tabla"></div>
+      <div class="vacio" id="vacio" style="display:none">
+        <div class="big">🛤️</div>
+        <div class="txt">Escribe un origen y un destino para ver las tarifas.</div>
+        <div class="sub">Ejemplo: CUENCA → GIRÓN, o QUITO → GUAYAQUIL</div>
       </div>
     </div>
-    <div class="ventas-info">
-      <span>🗓️ Fecha: <b id="fechaHoy"></b></span>
-      <span>💾 Los datos se guardan en este dispositivo</span>
-    </div>
-    <div id="listaVentas"></div>
-    <div class="ventas-vacio hidden" id="ventasVacio">
-      <div class="big">🧾</div>
-      <div class="txt">Aún no hay ventas registradas hoy.</div>
-      <div class="sub">Busca una ruta y toca "Vender" para registrar tu primera venta.</div>
-    </div>
-    <div class="ventas-acciones">
-      <button class="btn btn-exportar" id="btnExportar">⬇️ &nbsp;Descargar resumen (CSV)</button>
-      <button class="btn btn-limpiar" id="btnVaciarVentas" style="display:none">🗑️ &nbsp;Vaciar historial del día</button>
-    </div>
-  </section>
 
-  <div class="detalles">
-    <div class="det-carta">
-      <h3>📋 ¿Qué contiene?</h3>
-      <p><b>2.221 rutas</b> de transporte terrestre público de pasajeros en Ecuador, con su <b>tarifa oficial 2026</b> y la <b>tarifa preferencial</b> vigente desde el 22 de julio de 2026.</p>
-      <p style="margin-top:8px">Incluye rutas <b>interprovinciales</b> (entre provincias) e <b>intraprovinciales</b> (dentro de una misma provincia), cubriendo 25 provincias y 1.178 ciudades o sectores.</p>
+    <section id="panelVentas" class="hidden">
+      <div class="v-titulo tarjeta">
+        <h2>🧾 <span>Ventas de hoy</span></h2>
+        <span class="v-fecha" id="fechaHoy"></span>
+      </div>
+      <div class="ventas-info">
+        <div class="vi"><span class="vi-ic i1">💰</span><span><div class="vi-lb">Total del día</div><div class="vi-v" id="totDia">$0,00</div></span></div>
+        <div class="vi"><span class="vi-ic i2">🎟️</span><span><div class="vi-lb">Ventas</div><div class="vi-v" id="numVentas">0</div></span></div>
+        <div class="vi"><span class="vi-ic i3">🧑‍🤝‍🧑</span><span><div class="vi-lb">Pasajes</div><div class="vi-v" id="numPasajes">0</div></span></div>
+      </div>
+      <div class="v-titulo tarjeta" style="border-style:dashed; box-shadow:none;">
+        <div class="vi-acciones">
+          <button id="btnVaciarVentas">🗑️ Vaciar historial</button>
+          <button id="btnExportar">⬇️ Exportar CSV</button>
+        </div>
+      </div>
+      <div id="listaVentas"></div>
+      <div id="ventasVacio" class="ventas-vacio">
+        🧾 Aún no hay ventas registradas hoy.<br>
+        Ve a la pestaña <b>Buscar</b>, consulta una ruta y pulsa <b>Vender</b> en la fila.
+      </div>
+    </section>
+
+    <div class="detalles">
+      <div class="det-carta">
+        <h3>ℹ️ Cómo usar</h3>
+        <p>Escribe el <b>origen</b> y el <b>destino</b> en el panel izquierdo y pulsa <b>Buscar</b>.</p>
+        <p>Puedes escribir <b>ciudad</b>, <b>cantón</b> o <b>provincia</b>. Usa ⇄ para invertir los campos.</p>
+      </div>
+      <div class="det-carta">
+        <h3>🎟️ Registrar una venta</h3>
+        <ol>
+          <li>Busca la ruta deseada.</li>
+          <li>Pulsa <b>Vender</b> en la fila.</li>
+          <li>Ingresa el número de pasajes y pulsa <b>Confirmar</b>.</li>
+        </ol>
+      </div>
+      <div class="det-carta">
+        <h3>📌 Notas</h3>
+        <p><b>Coincidencia exacta</b> busca solo rutas idénticas. <b>Ambas direcciones</b> incluye el viaje de vuelta. Las tarifas son referenciales 2026 (ANT).</p>
+      </div>
     </div>
-    <div class="det-carta">
-      <h3>🚌 ¿Cómo se usa?</h3>
-      <ol>
-        <li>Escribe la ciudad, cantón o provincia de <b>salida</b> (Desde).</li>
-        <li>Escribe la de <b>llegada</b> (Hasta), o usa ⇄ para invertirlas.</li>
-        <li>Activa "Ambas direcciones" para buscar en los dos sentidos.</li>
-        <li>Usa "Coincidencia exacta" si buscas una ruta literal.</li>
-      </ol>
-    </div>
-    <div class="det-carta">
-      <h3>⚖️ Aviso</h3>
-      <p>Los valores provienen del <b>Anexo 1: Tarifas de Transporte Terrestre Público de Pasajeros Interprovincial e Intraprovincial en el Ecuador</b> publicado por la <b>ANT</b>.</p>
-      <p style="margin-top:8px">Esta herramienta es de <b>consulta informativa</b>. La tarifa final siempre la establece la Agencia Nacional de Tránsito del Ecuador.</p>
-    </div>
-  </div>
+
+  </main>
 </div>
 
-<div class="foot">
-  Fuente: ANT – Anexo 1 · Tarifas de Transporte Terrestre Público de Pasajeros (22/07/2026)<br>
-  Consulta solo informativa. Las tarifas oficiales las establece la Agencia Nacional de Tránsito del Ecuador.
-</div>
+<footer>RutaEC · Tarifas de transporte inter e intraprovincial — Ecuador 2026 · Datos referenciales ANT</footer>
 
-<div class="modal hidden" id="modalVenta">
-  <div class="modal-box">
-    <h3>🧾 Registrar venta</h3>
-    <div class="mv-ruta" id="mvRuta">
-      <div class="mv-punto"><span class="mv-ico">📍</span><div><div class="mv-lbl">Desde</div><div class="mv-nom" id="mvOrigen">–</div></div></div>
-      <div class="mv-flecha">→</div>
-      <div class="mv-punto"><span class="mv-ico">🏁</span><div><div class="mv-lbl">Hasta</div><div class="mv-nom" id="mvDestino">–</div></div></div>
+<div class="modal-caja hidden" id="modalVenta">
+  <div class="modal">
+    <h3>🎟️ Registrar venta</h3>
+    <div class="m-sub">Confirma los datos antes de registrar la venta.</div>
+    <div class="m-ruta">
+      <div class="mrt">RUTA SELECCIONADA</div>
+      <span id="mvOrigen"></span> → <span id="mvDestino"></span>
     </div>
-    <div class="mv-grid">
-      <div class="mv-campo">
+    <div class="m-grid">
+      <div class="m-campo">
         <label>Pasajes</label>
-        <input id="mvCant" type="number" min="1" value="1" step="1">
+        <input id="mvCant" type="number" min="1" max="99" value="1">
       </div>
-      <div class="mv-campo">
+      <div class="m-campo">
         <label>Precio por pasaje ($)</label>
         <input id="mvPrecio" type="text" inputmode="decimal">
       </div>
-      <div class="mv-campo mv-cliente">
+      <div class="m-campo full">
         <label>Cliente (opcional)</label>
-        <input id="mvCliente" type="text" placeholder="Nombre del pasajero">
+        <input id="mvCliente" type="text" placeholder="Nombre del cliente">
       </div>
     </div>
-    <div class="mv-total">Total: <b><span class="moneda">$</span><span id="mvTotal">0,00</span></b></div>
-    <div class="mv-acciones">
-      <button class="btn btn-buscar" id="mvConfirmar">✔ &nbsp;Registrar venta</button>
-      <button class="btn btn-limpiar" id="mvCancelar">Cancelar</button>
+    <div class="m-total">
+      <span class="mt-lb">Total</span>
+      <span class="mt-v" id="mvTotal">$0,00</span>
+    </div>
+    <div class="m-acc">
+      <button id="mvConfirmar">✔️ Confirmar venta</button>
+      <button id="mvCancelar">Cancelar</button>
     </div>
   </div>
 </div>
+
 <div class="toast hidden" id="toast"></div>
 
 <script>
