@@ -883,7 +883,7 @@ function apiPing(){
   });
 }
 function syncVentasFecha(clave, ventas){
-  if(!SYNC_ON) return;
+  if(!SUPA_URL.startsWith('http') || !SUPA_KEY) return;
   const filas = ventas.map(v=>({
     fecha: clave, hora: v.hora||'', folio: v.folio||0, cant: v.cant||1,
     precio: v.precio||0, total: v.total||0, ruta: v.ruta||'', detalle: v.detalle||'',
@@ -1526,4 +1526,5 @@ apiPing().then(()=>{
   cargarVentasDesdeBD();
   syncVentasFecha(fechaSel, ventas);
 });
+migrarTodoALaNube();
 </script>
