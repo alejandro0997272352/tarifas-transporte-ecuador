@@ -97,7 +97,26 @@ body{
 .ticker-in{display:inline-block; padding:7px 0; font-size:.68rem; font-weight:600; letter-spacing:1.5px; color:var(--muted2); animation:ticker 42s linear infinite;}
 
 /* ── layout ───────────────────────────────────── */
-.panel{max-width:1180px; margin:24px auto; padding:0 18px; display:flex; flex-direction:column; gap:15px;}
+.app{
+    position:relative; z-index:1; max-width:1240px; margin:22px auto; padding:0 18px;
+    display:grid; grid-template-columns:248px 1fr; gap:20px; align-items:start;
+}
+.side{position:sticky; top:84px; display:flex; flex-direction:column; gap:14px;}
+.side-tit{font-size:.62rem; font-weight:800; letter-spacing:1.6px; color:var(--muted); text-transform:uppercase; padding:0 4px;}
+.side .tabs{flex-direction:column; width:100%; gap:4px; background:var(--superficie); border:1px solid var(--borde); border-radius:16px; padding:6px; box-shadow:var(--sombra); backdrop-filter:blur(10px);}
+.side .tab{width:100%; justify-content:flex-start; padding:12px 14px; border-radius:11px; font-size:.76rem;}
+.side .tab.activo::after{display:none;}
+.side .tab .tab-badge{margin-left:auto;}
+.side-stats{display:grid; grid-template-columns:1fr; gap:8px;}
+.side-stats .q-st{display:flex; align-items:center; justify-content:space-between; text-align:left; padding:10px 14px; border-radius:13px; background:var(--superficie); border:1px solid var(--borde); box-shadow:var(--sombra); backdrop-filter:blur(10px);}
+.side-stats .q-st .n{font-size:1.1rem;}
+.side-stats .q-st .t{margin:0; font-size:.58rem;}
+.side-note{background:var(--superficie); border:1px solid var(--borde); border-radius:16px; padding:14px 16px; box-shadow:var(--sombra); backdrop-filter:blur(10px);}
+.side-note h3{font-size:.68rem; font-weight:800; letter-spacing:.6px; margin-bottom:10px; color:var(--verdeOsc);}
+.side-note p{font-size:.72rem; color:var(--texto); line-height:1.9;}
+.side-note b{color:var(--tinta); background:var(--fondo); border:1px solid var(--borde); border-radius:6px; padding:1px 7px; font-family:var(--led); font-size:.68rem;}
+
+.panel{display:flex; flex-direction:column; gap:15px; min-width:0;}
 
 /* ── quiosco buscador (glass-card) ────────────── */
 .quiosco{
@@ -441,9 +460,16 @@ mark{background:linear-gradient(120deg,#d1fae5,#a7f3d0); color:#065f46; padding:
 .bp .bp-total{font-weight:700; font-size:14px; margin-top:5px;}
 .bp .bp-pie{margin-top:9px; font-size:9px;}
 
-footer{max-width:1180px; margin:26px auto; padding:0 18px; color:var(--muted2); font-size:.68rem; font-weight:600; letter-spacing:1px; text-align:center;}
+footer{max-width:1240px; margin:10px auto 26px; padding:0 18px; color:var(--muted2); font-size:.68rem; font-weight:600; letter-spacing:1px; text-align:center;}
 
 /* ── responsive ───────────────────────────────── */
+@media(max-width:900px){
+    .app{grid-template-columns:1fr;}
+    .side{position:static; flex-direction:column;}
+    .side-stats{grid-template-columns:repeat(3,1fr);}
+    .side .tabs{flex-direction:row;}
+    .side .tab{width:auto; flex:1; justify-content:center; padding:11px 8px;}
+}
 @media(max-width:860px){
     .q-campos{grid-template-columns:1fr;}
     #btnSwap{width:100%; height:44px; margin:0;}
@@ -475,7 +501,7 @@ footer{max-width:1180px; margin:26px auto; padding:0 18px; color:var(--muted2); 
 </style>
 <header class="barra">
   <div class="barra-izq">
-    <span class="logo"><span class="led-dot"></span><span class="burb">🚌</span><span><b>RUTAEC</b><span class="sub">Salidas y tarifas · Ecuador 2026</span></span></span>
+    <span class="logo"><span class="led-dot"></span><span class="burb">🚌</span><span><b class="nom">RUTAEC</b><span class="sub">Salidas y tarifas · Ecuador 2026</span></span></span>
   </div>
   <div class="barra-der">
     <span class="barra-chip">🕒 <b id="heroFecha"></b></span>
@@ -486,164 +512,181 @@ footer{max-width:1180px; margin:26px auto; padding:0 18px; color:var(--muted2); 
 
 <div class="ticker"><span class="ticker-in">BIENVENIDO AL TABLERO DE SALIDAS · TARIFAS OFICIALES ANT 2026 · CONSULTE SU RUTA Y REGISTRE SUS VENTAS DEL DÍA · ⭐ GUARDE SUS RUTAS FRECUENTES · 🖨️ IMPRIMA SU BOLETO TÉRMICO · </span></div>
 
-<main class="panel">
+<div class="app">
 
-  <section class="quiosco">
-    <div class="q-titulo">◤ CONSULTAR TARIFA OFICIAL ◢<span class="ra"></span></div>
-    <div class="q-campos">
-      <div class="campo">
-        <label>Desde</label>
-        <span class="ic">🟢</span>
-        <input id="origen" list="lista" placeholder="CIUDAD · CANTÓN · PROVINCIA" autocomplete="off">
-        <button class="borrar" data-limpia="origen">✕</button>
-      </div>
-      <button id="btnSwap" title="Invertir">⇄</button>
-      <div class="campo">
-        <label>Hasta</label>
-        <span class="ic">🔴</span>
-        <input id="destino" list="lista" placeholder="CIUDAD · CANTÓN · PROVINCIA" autocomplete="off">
-        <button class="borrar" data-limpia="destino">✕</button>
-      </div>
-      <datalist id="lista"></datalist>
+  <aside class="side">
+    <div class="side-tit">NAVEGACIÓN</div>
+    <div class="tabs">
+      <button class="tab activo" data-tab="buscar">🔍 BUSCAR</button>
+      <button class="tab" data-tab="ventas">🧾 VENTAS <span class="tab-badge" id="badgeVentas">0</span></button>
+      <button class="tab" data-tab="caja">📈 CAJA</button>
     </div>
-    <div class="q-filtros">
-      <label class="chip" id="chipDir"><input type="checkbox" id="chkDir"> AMBAS DIRECCIONES</label>
-      <label class="chip" id="chipExact"><input type="checkbox" id="chkExact"> COINCIDENCIA EXACTA</label>
-    </div>
-    <div class="q-acciones">
-      <button id="btnBuscar" class="btn">🔍 BUSCAR</button>
-      <button id="btnLimpiar" class="btn" title="Limpiar">✕</button>
-    </div>
-    <div class="q-stats">
+
+    <div class="side-tit">BASE DE DATOS</div>
+    <div class="side-stats">
       <div class="q-st"><div class="n" id="statRutas">0</div><div class="t">Rutas</div></div>
       <div class="q-st"><div class="n" id="statProv">0</div><div class="t">Provincias</div></div>
       <div class="q-st"><div class="n" id="statCiud">0</div><div class="t">Ciudades</div></div>
     </div>
-  </section>
 
-  <div id="franjaFav" class="franja-fav hidden"></div>
-
-  <div class="tabs">
-    <button class="tab activo" data-tab="buscar">🔍 BUSCAR</button>
-    <button class="tab" data-tab="ventas">🧾 VENTAS <span class="tab-badge" id="badgeVentas">0</span></button>
-    <button class="tab" data-tab="caja">📈 CAJA</button>
-  </div>
-
-  <section id="tabBuscar">
-    <div class="resumen tarjeta">
-      <div class="cuenta" id="cuenta"></div>
-      <div class="orden">
-        <select id="orden">
-          <option value="precio">TARIFA MENOR → MAYOR</option>
-          <option value="precio_desc">TARIFA MAYOR → MENOR</option>
-          <option value="origen">POR ORIGEN</option>
-          <option value="destino">POR DESTINO</option>
-        </select>
-      </div>
-    </div>
-    <div class="stats-res" id="statsRes" style="display:none">
-      <div class="st"><span class="st-ic">📉</span><span><div class="st-lb">Tarifa más baja</div><div class="st-v" id="stBaja">—</div></span></div>
-      <div class="st"><span class="st-ic">📈</span><span><div class="st-lb">Tarifa más alta</div><div class="st-v" id="stAlta">—</div></span></div>
-      <div class="st"><span class="st-ic">⚖️</span><span><div class="st-lb">Tarifa promedio</div><div class="st-v" id="stProm">—</div></span></div>
-    </div>
-    <div class="ambit" id="ambitRes"></div>
-    <div class="aviso-scroll">↔️ DESLIZA LA TABLA PARA VER TARIFA · ESTADO · FAVORITO · VENDER</div>
-    <div id="tabla"></div>
-    <div class="vacio" id="vacio" style="display:none">
-      <div class="big">🛤️</div>
-      <div class="txt">CONSULTA UNA RUTA EN EL PANEL SUPERIOR</div>
-      <div class="sub">EJEMPLO: CUENCA → GIRÓN · QUITO → GUAYAQUIL · PULSA / PARA BUSCAR</div>
-    </div>
-  </section>
-
-  <section id="panelVentas" class="hidden">
-    <div class="resumen tarjeta">
-      <div class="v-titulo">
-        <h2>🧾 <span>VENTAS DEL DÍA</span></h2>
-        <div class="v-navegacion">
-          <button class="nav-btn" id="btnDiaAnt" title="Día anterior">◀</button>
-          <input type="date" id="fechaNav">
-          <button class="nav-btn" id="btnDiaSig" title="Día siguiente">▶</button>
-          <button class="nav-btn" id="btnHoy" title="Ir a hoy" style="width:auto; padding:0 12px;">HOY</button>
-        </div>
-      </div>
-      <div class="v-fecha" id="fechaHoy" style="margin-top:8px;"></div>
-    </div>
-    <div class="ventas-info">
-      <div class="vi"><span class="vi-ic i1">💰</span><span><div class="vi-lb">Total</div><div class="vi-v"><b id="totDia">$0,00</b></div></span></div>
-      <div class="vi"><span class="vi-ic i2">🎟️</span><span><div class="vi-lb">Ventas</div><div class="vi-v" id="numVentas">0</div></span></div>
-      <div class="vi"><span class="vi-ic i3">🧑🤝🧑</span><span><div class="vi-lb">Pasajes</div><div class="vi-v" id="numPasajes">0</div></span></div>
-    </div>
-    <div class="resumen tarjeta" style="box-shadow:none; border-style:dashed;">
-      <div class="vi-acciones">
-        <button id="btnVaciarVentas">🗑️ VACIAR HISTORIAL</button>
-        <button id="btnExportar">⬇️ EXPORTAR CSV</button>
-      </div>
-    </div>
-    <div id="listaVentas"></div>
-    <div id="ventasVacio" class="ventas-vacio">
-      🧾 AÚN NO HAY VENTAS EN ESTA FECHA.<br>
-      VE A <b>BUSCAR</b>, CONSULTA UNA RUTA Y PULSA <b>VENDER</b> EN LA FILA.
-    </div>
-  </section>
-
-  <section id="panelCaja" class="hidden">
-    <div class="resumen tarjeta">
-      <div class="v-titulo">
-        <h2>📈 <span>REPORTE DE CAJA</span></h2>
-        <div class="caja-rango">
-          <label>Rango</label>
-          <select id="cajaRango">
-            <option value="hoy">HOY</option>
-            <option value="ayer">AYER</option>
-            <option value="semana">ÚLTIMOS 7 DÍAS</option>
-            <option value="mes">ESTE MES</option>
-            <option value="personalizado">PERSONALIZADO</option>
-          </select>
-          <label style="display:none" id="lbDesde">Desde</label>
-          <input type="date" id="cajaDesde" style="display:none">
-          <label style="display:none" id="lbHasta">Hasta</label>
-          <input type="date" id="cajaHasta" style="display:none">
-        </div>
-      </div>
-    </div>
-    <div class="caja-totales">
-      <div class="ct"><div class="ct-ic">💰</div><div class="ct-lb">Ingresos</div><div class="ct-v" id="cajaTotal">$0,00</div></div>
-      <div class="ct"><div class="ct-ic">🎟️</div><div class="ct-lb">Ventas</div><div class="ct-v" id="cajaNumVentas">0</div></div>
-      <div class="ct"><div class="ct-ic">🧑🤝🧑</div><div class="ct-lb">Pasajes</div><div class="ct-v" id="cajaPasajes">0</div></div>
-      <div class="ct"><div class="ct-ic">⚖️</div><div class="ct-lb">Ticket promedio</div><div class="ct-v" id="cajaPromedio">—</div></div>
-    </div>
-    <div class="caja-detalles">
-      <div class="cd"><div class="cd-tit">🏆 Ruta más vendida</div><div class="cd-val" id="cajaMejorRuta">—</div></div>
-      <div class="cd"><div class="cd-tit">⏰ Hora pico</div><div class="cd-val" id="cajaHoraPico">—</div></div>
-      <div class="cd"><div class="cd-tit">🏅 Top 5 rutas</div><div id="cajaTopRutas"><div class="sin-datos">Sin ventas en el rango</div></div></div>
-    </div>
-    <div class="caja-grafico" id="cajaGrafico"></div>
-    <div class="resumen tarjeta" style="box-shadow:none; border-style:dashed;">
-      <div class="vi-acciones">
-        <button id="btnBackup" class="btn-config" style="width:auto; padding:10px 15px; font-family:var(--led); font-size:.72rem; letter-spacing:1px;">⬇️ RESPALDAR VENTAS</button>
-        <button id="btnRestaurar" class="btn-config" style="width:auto; padding:10px 15px; font-family:var(--led); font-size:.72rem; letter-spacing:1px;">⬆️ RESTAURAR</button>
-      </div>
-      <input type="file" id="fileBackup" accept=".json" style="display:none;">
-    </div>
-  </section>
-
-  <div class="detalles">
-    <div class="det-carta">
-      <h3>ℹ️ CÓMO USAR</h3>
-      <p>Escribe <b>origen</b> y <b>destino</b> arriba y pulsa <b>BUSCAR</b>. Acepta ciudad, cantón o provincia. Usa <b>⇄</b> para invertir.</p>
-    </div>
-    <div class="det-carta">
-      <h3>🎟️ VENDER</h3>
-      <p>Pulsa <b>VENDER</b> en la fila, ingresa pasajes y asiento, confirma. ⭐ guarda la ruta para vender en un toque. 🖨️ imprime el boleto térmico.</p>
-    </div>
-    <div class="det-carta">
+    <div class="side-note">
       <h3>📌 ATAJOS</h3>
-      <p><b>/</b> enfoca la búsqueda · <b>↑↓</b> recorren el tablero · <b>Enter</b> vende la fila resaltada · <b>Esc</b> limpia la selección.</p>
+      <p><b>/</b> busca una ruta</p>
+      <p><b>↑↓</b> recorren el tablero</p>
+      <p><b>Enter</b> vende la fila</p>
+      <p><b>Esc</b> limpia la selección</p>
     </div>
-  </div>
+  </aside>
 
-</main>
+  <main class="panel">
+
+    <section class="quiosco">
+      <div class="q-titulo">◤ CONSULTAR TARIFA OFICIAL ◢<span class="ra"></span></div>
+      <div class="q-campos">
+        <div class="campo">
+          <label>Desde</label>
+          <span class="ic">🟢</span>
+          <input id="origen" list="lista" placeholder="CIUDAD · CANTÓN · PROVINCIA" autocomplete="off">
+          <button class="borrar" data-limpia="origen">✕</button>
+        </div>
+        <button id="btnSwap" title="Invertir">⇄</button>
+        <div class="campo">
+          <label>Hasta</label>
+          <span class="ic">🔴</span>
+          <input id="destino" list="lista" placeholder="CIUDAD · CANTÓN · PROVINCIA" autocomplete="off">
+          <button class="borrar" data-limpia="destino">✕</button>
+        </div>
+        <datalist id="lista"></datalist>
+      </div>
+      <div class="q-filtros">
+        <label class="chip" id="chipDir"><input type="checkbox" id="chkDir"> AMBAS DIRECCIONES</label>
+        <label class="chip" id="chipExact"><input type="checkbox" id="chkExact"> COINCIDENCIA EXACTA</label>
+      </div>
+      <div class="q-acciones">
+        <button id="btnBuscar" class="btn">🔍 BUSCAR</button>
+        <button id="btnLimpiar" class="btn" title="Limpiar">✕</button>
+      </div>
+    </section>
+
+    <div id="franjaFav" class="franja-fav hidden"></div>
+
+    <section id="tabBuscar">
+      <div class="resumen tarjeta">
+        <div class="cuenta" id="cuenta"></div>
+        <div class="orden">
+          <select id="orden">
+            <option value="precio">TARIFA MENOR → MAYOR</option>
+            <option value="precio_desc">TARIFA MAYOR → MENOR</option>
+            <option value="origen">POR ORIGEN</option>
+            <option value="destino">POR DESTINO</option>
+          </select>
+        </div>
+      </div>
+      <div class="stats-res" id="statsRes" style="display:none">
+        <div class="st"><span class="st-ic">📉</span><span><div class="st-lb">Tarifa más baja</div><div class="st-v" id="stBaja">—</div></span></div>
+        <div class="st"><span class="st-ic">📈</span><span><div class="st-lb">Tarifa más alta</div><div class="st-v" id="stAlta">—</div></span></div>
+        <div class="st"><span class="st-ic">⚖️</span><span><div class="st-lb">Tarifa promedio</div><div class="st-v" id="stProm">—</div></span></div>
+      </div>
+      <div class="ambit" id="ambitRes"></div>
+      <div class="aviso-scroll">↔️ DESLIZA LA TABLA PARA VER TARIFA · ESTADO · FAVORITO · VENDER</div>
+      <div id="tabla"></div>
+      <div class="vacio" id="vacio" style="display:none">
+        <div class="big">🛤️</div>
+        <div class="txt">CONSULTA UNA RUTA EN EL PANEL SUPERIOR</div>
+        <div class="sub">EJEMPLO: CUENCA → GIRÓN · QUITO → GUAYAQUIL · PULSA / PARA BUSCAR</div>
+      </div>
+    </section>
+
+    <section id="panelVentas" class="hidden">
+      <div class="resumen tarjeta">
+        <div class="v-titulo">
+          <h2>🧾 <span>VENTAS DEL DÍA</span></h2>
+          <div class="v-navegacion">
+            <button class="nav-btn" id="btnDiaAnt" title="Día anterior">◀</button>
+            <input type="date" id="fechaNav">
+            <button class="nav-btn" id="btnDiaSig" title="Día siguiente">▶</button>
+            <button class="nav-btn" id="btnHoy" title="Ir a hoy" style="width:auto; padding:0 12px;">HOY</button>
+          </div>
+        </div>
+        <div class="v-fecha" id="fechaHoy" style="margin-top:8px;"></div>
+      </div>
+      <div class="ventas-info">
+        <div class="vi"><span class="vi-ic i1">💰</span><span><div class="vi-lb">Total</div><div class="vi-v"><b id="totDia">$0,00</b></div></span></div>
+        <div class="vi"><span class="vi-ic i2">🎟️</span><span><div class="vi-lb">Ventas</div><div class="vi-v" id="numVentas">0</div></span></div>
+        <div class="vi"><span class="vi-ic i3">🧑🤝🧑</span><span><div class="vi-lb">Pasajes</div><div class="vi-v" id="numPasajes">0</div></span></div>
+      </div>
+      <div class="resumen tarjeta" style="box-shadow:none; border-style:dashed;">
+        <div class="vi-acciones">
+          <button id="btnExportar">⬇️ EXPORTAR CSV</button>
+          <button id="btnVaciarVentas">🗑️ VACIAR HISTORIAL</button>
+        </div>
+      </div>
+      <div id="listaVentas"></div>
+      <div id="ventasVacio" class="ventas-vacio">
+        🧾 AÚN NO HAY VENTAS EN ESTA FECHA.<br>
+        VE A <b>BUSCAR</b>, CONSULTA UNA RUTA Y PULSA <b>VENDER</b> EN LA FILA.
+      </div>
+    </section>
+
+    <section id="panelCaja" class="hidden">
+      <div class="resumen tarjeta">
+        <div class="v-titulo">
+          <h2>📈 <span>REPORTE DE CAJA</span></h2>
+          <div class="caja-rango">
+            <label>Rango</label>
+            <select id="cajaRango">
+              <option value="hoy">HOY</option>
+              <option value="ayer">AYER</option>
+              <option value="semana">ÚLTIMOS 7 DÍAS</option>
+              <option value="mes">ESTE MES</option>
+              <option value="personalizado">PERSONALIZADO</option>
+            </select>
+            <label style="display:none" id="lbDesde">Desde</label>
+            <input type="date" id="cajaDesde" style="display:none">
+            <label style="display:none" id="lbHasta">Hasta</label>
+            <input type="date" id="cajaHasta" style="display:none">
+          </div>
+        </div>
+      </div>
+      <div class="caja-totales">
+        <div class="ct"><div class="ct-ic">💰</div><div class="ct-lb">Ingresos</div><div class="ct-v" id="cajaTotal">$0,00</div></div>
+        <div class="ct"><div class="ct-ic">🎟️</div><div class="ct-lb">Ventas</div><div class="ct-v" id="cajaNumVentas">0</div></div>
+        <div class="ct"><div class="ct-ic">🧑🤝🧑</div><div class="ct-lb">Pasajes</div><div class="ct-v" id="cajaPasajes">0</div></div>
+        <div class="ct"><div class="ct-ic">⚖️</div><div class="ct-lb">Ticket promedio</div><div class="ct-v" id="cajaPromedio">—</div></div>
+      </div>
+      <div class="caja-detalles">
+        <div class="cd"><div class="cd-tit">🏆 Ruta más vendida</div><div class="cd-val" id="cajaMejorRuta">—</div></div>
+        <div class="cd"><div class="cd-tit">⏰ Hora pico</div><div class="cd-val" id="cajaHoraPico">—</div></div>
+        <div class="cd"><div class="cd-tit">🏅 Top 5 rutas</div><div id="cajaTopRutas"><div class="sin-datos">Sin ventas en el rango</div></div></div>
+      </div>
+      <div class="caja-grafico" id="cajaGrafico"></div>
+      <div class="resumen tarjeta" style="box-shadow:none; border-style:dashed;">
+        <div class="vi-acciones">
+          <button id="btnBackup" class="btn-config" style="width:auto; padding:10px 15px; font-family:var(--led); font-size:.72rem; letter-spacing:1px;">⬇️ RESPALDAR VENTAS</button>
+          <button id="btnRestaurar" class="btn-config" style="width:auto; padding:10px 15px; font-family:var(--led); font-size:.72rem; letter-spacing:1px;">⬆️ RESTAURAR</button>
+        </div>
+        <input type="file" id="fileBackup" accept=".json" style="display:none;">
+      </div>
+    </section>
+
+    <div class="detalles">
+      <div class="det-carta">
+        <h3>ℹ️ CÓMO USAR</h3>
+        <p>Escribe <b>origen</b> y <b>destino</b> arriba y pulsa <b>BUSCAR</b>. Acepta ciudad, cantón o provincia. Usa <b>⇄</b> para invertir.</p>
+      </div>
+      <div class="det-carta">
+        <h3>🎟️ VENDER</h3>
+        <p>Pulsa <b>VENDER</b> en la fila, ingresa pasajes y asiento, confirma. ⭐ guarda la ruta para vender en un toque. 🖨️ imprime el boleto térmico.</p>
+      </div>
+      <div class="det-carta">
+        <h3>📌 ATAJOS</h3>
+        <p><b>/</b> enfoca la búsqueda · <b>↑↓</b> recorren el tablero · <b>Enter</b> vende la fila resaltada · <b>Esc</b> limpia la selección.</p>
+      </div>
+    </div>
+
+  </main>
+
+</div>
 
 <footer>RUTAEC · TABLERO DE SALIDAS Y TARIFAS INTER E INTRAPROVINCIALES — ECUADOR 2026 · DATOS REFERENCIALES ANT</footer>
 
@@ -705,7 +748,7 @@ footer{max-width:1180px; margin:26px auto; padding:0 18px; color:var(--muted2); 
       </div>
       <div class="m-campo">
         <label>Ancho de impresión</label>
-        <select id="cfgAncho" style="background:var(--panel3); color:var(--tinta); border:1px solid var(--borde2); border-radius:11px; padding:10px 12px; font-family:var(--led); font-size:.88rem; outline:none; color-scheme:dark;">
+        <select id="cfgAncho" style="background:var(--panel3); color:var(--tinta); border:1px solid var(--borde2); border-radius:11px; padding:10px 12px; font-family:var(--led); font-size:.88rem; outline:none; color-scheme:light;">
           <option value="80">80 mm (estándar)</option>
           <option value="58">58 mm (térmica pequeña)</option>
         </select>
