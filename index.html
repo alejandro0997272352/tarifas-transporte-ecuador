@@ -12,7 +12,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 :root {
     --primary:#6366f1; --primary-glow:rgba(99,102,241,.35); --success:#10b981; --danger:#ef4444; --info:#3b82f6; --warn:#f59e0b;
     --violet:#8b5cf6; --pink:#ec4899;
@@ -310,15 +311,18 @@ body{overflow-x:hidden; overscroll-behavior-y:contain;}
 @media(max-width:720px){.stats{grid-template-columns:1fr 1fr;}}
 @media(max-width:620px){
     body{font-size:14px;}
-    .header{padding:14px 12px;}
-    .header h1{font-size:19px;}
-    .header p{font-size:11px;}
-    .header .icon{width:46px;height:46px;font-size:22px;border-radius:14px;}
-    .header-actions{gap:6px;}
-    .pill{padding:6px 10px;font-size:12px;border-radius:16px;}
-    .link-btn{padding:7px 11px;font-size:14px;border-radius:10px;}
-    .nav{padding:10px 12px 0;gap:6px;}
-    .tab{padding:10px 12px;font-size:12px;border-radius:12px;}
+    .header{padding:12px 12px 10px;}
+    .header h1{font-size:18px;}
+    .header p{display:none;}
+    .header .icon{width:42px;height:42px;font-size:21px;border-radius:13px;}
+    .header-inner{flex-wrap:nowrap;}
+    .header-actions{gap:6px;flex-wrap:nowrap;}
+    .pill{padding:5px 8px;font-size:11px;border-radius:14px;}
+    .pill b{max-width:74px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .link-btn{padding:6px 9px;font-size:13px;border-radius:9px;}
+    .nav{padding:10px 12px 0;gap:6px;flex-wrap:nowrap;}
+    .tab{padding:10px 12px;font-size:12px;border-radius:12px;flex:1;justify-content:center;white-space:nowrap;}
+    .tab .tab-badge{flex-shrink:0;}
     .container{padding:0 12px;margin:14px auto;}
     .page-head{margin:2px 0 16px;gap:12px;}
     .ph-icon{width:50px;height:50px;border-radius:15px;font-size:24px;}
@@ -370,7 +374,9 @@ body{overflow-x:hidden; overscroll-behavior-y:contain;}
     *,*::before,*::after{transition:none !important;animation:none !important;}
     html{scroll-behavior:auto;}
     .blob{animation:none;}
-}</style><header class="header">
+}
+</style>
+<header class="header">
   <div class="header-inner">
     <div class="header-title">
       <span class="icon">🚌</span>
