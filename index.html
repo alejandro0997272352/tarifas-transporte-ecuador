@@ -270,6 +270,8 @@ html[data-theme="dark"] .franja-fav,.fav-pill{background:var(--card);}
 .field input:focus,.field select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-glow);}
 .form-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1.2fr;gap:12px;align-items:end;grid-template-areas:"n c q p b";}
 .form-grid .f-n{grid-area:n;}.form-grid .f-c{grid-area:c;}.form-grid .f-q{grid-area:q;}.form-grid .f-p{grid-area:p;}.form-grid .f-b{grid-area:b;}
+.m-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left;margin-top:10px;}
+.m-grid .field{text-align:left;}
 .chips-clientes{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
 .cli-chip{background:var(--card);border:1px solid var(--border);color:var(--text);font-size:12px;font-weight:600;padding:6px 12px;border-radius:20px;cursor:pointer;transition:.2s;font-family:var(--pop);}
 .cli-chip:hover{border-color:var(--primary);color:var(--primary);}
@@ -301,27 +303,73 @@ html[data-theme="dark"] .franja-fav,.fav-pill{background:var(--card);}
 }
 
 /* ── responsive ──────────────────────────────── */
+html{-webkit-text-size-adjust:100%; text-size-adjust:100%;}
+body{overflow-x:hidden; overscroll-behavior-y:contain;}
+.tabla-caja,.table-wrap{-webkit-overflow-scrolling:touch; overscroll-behavior:contain;}
 @media(max-width:800px){.two-cols{grid-template-columns:1fr;}}
 @media(max-width:720px){.stats{grid-template-columns:1fr 1fr;}}
 @media(max-width:620px){
     body{font-size:14px;}
-    .header{padding:16px;}
-    .header h1{font-size:20px;}
-    .nav{padding:12px 12px 0;}
-    .tab{padding:10px 14px;font-size:13px;}
-    .stats{grid-template-columns:1fr 1fr;}
-    .stat .value{font-size:22px;}
-    .q-campos{grid-template-columns:1fr;}
-    .btn-swap{width:100%;height:44px;}
-    .q-acciones{grid-template-columns:1fr;}
-    .card{padding:20px;}
-    .form-grid{grid-template-columns:1fr;grid-template-areas:none;}
-    .l-v-item{grid-template-columns:auto 1fr auto auto;gap:10px;}
+    .header{padding:14px 12px;}
+    .header h1{font-size:19px;}
+    .header p{font-size:11px;}
+    .header .icon{width:46px;height:46px;font-size:22px;border-radius:14px;}
+    .header-actions{gap:6px;}
+    .pill{padding:6px 10px;font-size:12px;border-radius:16px;}
+    .link-btn{padding:7px 11px;font-size:14px;border-radius:10px;}
+    .nav{padding:10px 12px 0;gap:6px;}
+    .tab{padding:10px 12px;font-size:12px;border-radius:12px;}
+    .container{padding:0 12px;margin:14px auto;}
+    .page-head{margin:2px 0 16px;gap:12px;}
+    .ph-icon{width:50px;height:50px;border-radius:15px;font-size:24px;}
+    .ph-txt h2{font-size:19px;}
+    .ph-txt p{font-size:12px;}
+    .stats{gap:10px;margin-bottom:14px;grid-template-columns:1fr 1fr;}
+    .stat{padding:14px;border-radius:16px;border-left-width:4px;}
+    .stat .label{font-size:11px;}
+    .stat .value{font-size:20px;margin-top:4px;}
+    .card{padding:18px;margin-bottom:16px;border-radius:18px;}
+    .card h2{font-size:16px;margin-bottom:12px;}
+    .card h2 .chip{width:30px;height:30px;font-size:14px;border-radius:9px;}
+    .q-campos{grid-template-columns:1fr;gap:10px;}
+    .campo input,.field input,.field select{font-size:16px;padding:13px 14px;}
+    .campo input{padding-left:42px;}
+    .campo .ic{font-size:13px;}
+    .btn-swap{width:100%;height:46px;}
+    .q-filtros{margin-top:12px;}
+    .q-acciones{grid-template-columns:1fr;margin-top:12px;}
+    .btn{padding:13px 16px;font-size:14px;}
+    .btn.swap{height:46px;}
+    .form-grid{grid-template-columns:1fr;grid-template-areas:none;gap:10px;}
+    .m-grid{grid-template-columns:1fr;gap:10px;}
+    .modal-wide .m-grid .field{margin-bottom:0;}
+    .l-v-item{grid-template-columns:auto 1fr auto auto;gap:10px;padding:12px;}
     .l-v-monto{grid-column:2/5;}
+    .m-grid .m-campo input{font-size:16px;}
+    .aviso-scroll,.empty,.modal,.cg{font-size:13px;}
+    .modal{padding:22px;width:min(430px,94vw);border-radius:20px;}
+    .modal h3{font-size:17px;}
+    .m-actions{flex-wrap:wrap;}
+    .m-actions .btn{min-height:46px;}
+    .cantidad-sel,.toolbar{flex-wrap:wrap;}
+    th,td{padding:11px 12px;}
+    thead th{font-size:10px;}
+    .noflex table{font-size:13px;}
+}
+@media(max-width:360px){
+    .stats{grid-template-columns:1fr;}
+    .pill{font-size:11px;}
+    .header-actions{gap:4px;}
+}
+/* móvil: menos consumo de GPU y animaciones suaves */
+@media(any-pointer:coarse), (max-width:620px){
+    .blob{filter:blur(50px); opacity:.22;}
+    .header .icon,.ph-icon,.empty-circle{animation-duration:.01s;}
 }
 @media(prefers-reduced-motion:reduce){
     *,*::before,*::after{transition:none !important;animation:none !important;}
     html{scroll-behavior:auto;}
+    .blob{animation:none;}
 }</style><header class="header">
   <div class="header-inner">
     <div class="header-title">
@@ -527,7 +575,7 @@ html[data-theme="dark"] .franja-fav,.fav-pill{background:var(--card);}
     <h3>Registrar venta</h3>
     <p>Confirma los datos antes de vender.</p>
     <span class="m-product" id="mvOrigen"></span> → <span class="m-product" id="mvDestino"></span>
-    <div class="form-grid" style="grid-template-columns:1fr 1fr;grid-template-areas:none;gap:12px;">
+    <div class="m-grid">
       <div class="field"><label>Pasajes</label><input id="mvCant" type="number" min="1" max="99" value="1"></div>
       <div class="field"><label>Precio c/u ($)</label><input id="mvPrecio" type="text" inputmode="decimal"></div>
       <div class="field"><label>Asiento (opcional)</label><input id="mvAsiento" type="text" placeholder="Ej. 12, 14-16"></div>
@@ -552,7 +600,7 @@ html[data-theme="dark"] .franja-fav,.fav-pill{background:var(--card);}
     <span class="m-icon">⚙️</span>
     <h3>Negocio</h3>
     <p>Datos que aparecen en el boleto impreso y en el CSV.</p>
-    <div class="form-grid" style="grid-template-columns:1fr 1fr;grid-template-areas:none;gap:12px;">
+    <div class="m-grid">
       <div class="field"><label>Nombre del negocio</label><input id="cfgNegocio" type="text" placeholder="Cooperativa de Transporte ..."></div>
       <div class="field"><label>RUC (opcional)</label><input id="cfgRuc" type="text" placeholder="0000000000001"></div>
       <div class="field"><label>Pie del boleto</label><input id="cfgPie" type="text" placeholder="GRACIAS POR VIAJAR"></div>
