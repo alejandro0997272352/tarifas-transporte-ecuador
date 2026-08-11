@@ -921,6 +921,21 @@ function vaciarBD(fecha){
     fetch(supaBase()+'?fecha=eq.'+encodeURIComponent(fecha), {method:'DELETE', headers:supaHeaders()}).catch(()=>{});
   }catch(e){}
 }
+function migrarTodoALaNube(){
+  if(!SYNC_ON) return;
+  try{
+    const fechas = [];
+    for(let i = 0; i < localStorage.length; i++){
+      const k = localStorage.key(i);
+      if(k && k.indexOf('ventas_') === 0) fechas.push(k.slice(7));
+    }
+    fechas.forEach(fecha=>{
+      let vs = [];
+      try{ vs = JSON.parse(localStorage.getItem('ventas_'+fecha) || '[]'); }catch(e){ vs = []; }
+      if(Array.isArray(vs) && vs.length) syncVentasFecha(fecha, vs);
+    });
+  }catch(e){}
+}
 
 // ================= CLIENTES =================
 let clientes = [];
@@ -1507,6 +1522,7 @@ renderFranja();
 actualizarPanelVentas();
 actualizarClientes();
 apiPing().then(()=>{
+  migrarTodoALaNube();
   cargarVentasDesdeBD();
   syncVentasFecha(fechaSel, ventas);
 });
