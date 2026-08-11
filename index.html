@@ -860,45 +860,51 @@ function recomputarFolio(){
 let folioActual = 1;
 recomputarFolio();
 
-// ================= SINCRONIZACIÓN MySQL (API PHP local) =================
-const API = 'api_rutacc.php';
+// ================= SINCRONIZACIÓN SUPABASE (nube 24/7) =================
+// Credenciales: Dashboard → Settings → API Keys (o botón "Connect").
+const SUPA_URL = 'https://uqpbnhxuiekjdadzybon.supabase.co';
+const SUPA_KEY = 'sb_publishable_IfR3gav3QrDV4A6ADd5_6w_AA2kpC8M';
+const SUPA_TABLA = 'rutacc_ventas';
 let SYNC_ON = false;
-function apiUrl(params){
-  params = params || {};
-  const q = Object.keys(params).map(k=>encodeURIComponent(k)+'='+encodeURIComponent(params[k])).join('&');
-  return API + (q ? '?'+q : '');
+function supaHeaders(){
+  return {'apikey':SUPA_KEY, 'Authorization':'Bearer '+SUPA_KEY, 'Content-Type':'application/json'};
 }
-function apiPost(params, data, cb){
-  try{
-    fetch(apiUrl(params), {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data || {})})
-      .then(r=>r.json()).then(j=>{ if(cb) cb(j); }).catch(()=>{});
-  }catch(e){ if(cb) cb({ok:false}); }
-}
+function supaBase(){ return SUPA_URL + '/rest/v1/' + SUPA_TABLA; }
 function apiPing(){
   return new Promise(res=>{
+    if(!SUPA_URL.startsWith('http') || !SUPA_KEY){ res(false); return; }
     try{
       const c = new AbortController();
-      const t = setTimeout(()=>{ c.abort(); res(false); }, 2500);
-      fetch(apiUrl({accion:'ventas', fecha:fechaClave()}), {signal:c.signal})
-        .then(r=>r.json()).then(j=>{ clearTimeout(t); SYNC_ON = !!(j && j.ok); res(SYNC_ON); })
+      const t = setTimeout(()=>{ c.abort(); res(false); }, 6000);
+      fetch(supaBase()+'?select=id&limit=1', {headers:supaHeaders(), signal:c.signal})
+        .then(r=>{ clearTimeout(t); SYNC_ON = r.ok; res(SYNC_ON); })
         .catch(()=>{ clearTimeout(t); res(false); });
     }catch(e){ res(false); }
   });
 }
 function syncVentasFecha(clave, ventas){
   if(!SYNC_ON) return;
-  apiPost({accion:'sincronizar'}, {fecha:clave, ventas:ventas}, j=>{
-    if(j && j.ok && j.n !== undefined){} else { /* sin conexión ahora, se reintenta en próxima venta */ }
-  });
+  const filas = ventas.map(v=>({
+    fecha: clave, hora: v.hora||'', folio: v.folio||0, cant: v.cant||1,
+    precio: v.precio||0, total: v.total||0, ruta: v.ruta||'', detalle: v.detalle||'',
+    cliente: v.cliente||'', cedula: v.cedula||'', asiento: v.asiento||'',
+    operadora: v.operadora||'', bus: v.bus||'', placa: v.placa||'', terminal: v.terminal||''
+  }));
+  try{
+    fetch(supaBase(), {
+      method:'POST', headers:Object.assign(supaHeaders(), {'Prefer':'resolution=merge-duplicates'}),
+      body: JSON.stringify(filas)
+    }).catch(()=>{});
+  }catch(e){}
 }
 function cargarVentasDesdeBD(){
   if(!SYNC_ON) return;
   try{
-    fetch(apiUrl({accion:'todo'}))
-      .then(r=>r.json()).then(j=>{
-        if(!j || !j.ok || !Array.isArray(j.ventas)) return;
+    fetch(supaBase()+'?select=*', {headers:supaHeaders()})
+      .then(r=>r.json()).then(rows=>{
+        if(!Array.isArray(rows)) return;
         const agrup = {};
-        j.ventas.forEach(v=>{ (agrup[v.fecha] = agrup[v.fecha] || []).push(v); });
+        rows.forEach(v=>{ (agrup[v.fecha] = agrup[v.fecha] || []).push(v); });
         Object.keys(agrup).forEach(fecha=>{
           try{ localStorage.setItem('ventas_'+fecha, JSON.stringify(agrup[fecha])); }catch(e){}
         });
@@ -907,6 +913,12 @@ function cargarVentasDesdeBD(){
         actualizarPanelVentas();
         actualizarCaja();
       }).catch(()=>{});
+  }catch(e){}
+}
+function vaciarBD(fecha){
+  if(!SYNC_ON || !fecha) return;
+  try{
+    fetch(supaBase()+'?fecha=eq.'+encodeURIComponent(fecha), {method:'DELETE', headers:supaHeaders()}).catch(()=>{});
   }catch(e){}
 }
 
@@ -1412,7 +1424,7 @@ document.getElementById('btnVaciarVentas').addEventListener('click', function(){
   confirmVaciar = false;
   this.textContent='🗑️ VACIAR HISTORIAL';
   ventas=[]; guardarVentasFecha(fechaSel, ventas); actualizarPanelVentas();
-  if(SYNC_ON) apiPost({accion:'vaciar'}, {fecha:fechaSel}, ()=>{});
+  if(SYNC_ON) vaciarBD(fechaSel);
   mostrarToast('HISTORIAL DEL DÍA BORRADO');
 });
 
