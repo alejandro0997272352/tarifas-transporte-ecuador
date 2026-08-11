@@ -171,8 +171,9 @@
   }
   .orden select:focus{outline:none; box-shadow:0 0 0 4px rgba(6,182,212,.14);}
   .tabla-caja{
-    background:rgba(255,255,255,.94); border-radius:20px; overflow:hidden;
-    box-shadow:0 14px 40px rgba(30,50,100,.12); animation:subir .5s ease both;
+    background:rgba(255,255,255,.94); border-radius:20px; overflow-x:auto;
+    -webkit-overflow-scrolling:touch; box-shadow:0 14px 40px rgba(30,50,100,.12);
+    animation:subir .5s ease both;
   }
   table{width:100%; border-collapse:collapse;}
   thead th{
@@ -246,6 +247,10 @@
   .ambit .tag b{color:var(--tinta);}
   .ambit .tag.inter b{color:#4c1d95;}
   .ambit .tag.intra b{color:#065f46;}
+  .aviso-scroll{
+    display:none; text-align:right; font-size:.68rem; color:var(--gris2);
+    margin:0 4px 6px; font-weight:500;
+  }
 
   /* sección de detalle al pie */
   .detalles{
@@ -266,13 +271,19 @@
     .swap{width:100%; display:flex; justify-content:center;}
     .swap button{width:100%;}
     .acciones .btn{min-width:120px;}
-    thead th:nth-child(3), tbody td:nth-child(3){display:none;}
     .resumen{flex-direction:column; align-items:stretch;}
     .cuenta{text-align:center;}
     .orden select{width:100%;}
     .stats-res{grid-template-columns:repeat(3,1fr); gap:8px;}
     .stats-res .st{padding:10px 10px;}
     .detalles{grid-template-columns:1fr;}
+    table{min-width:620px;}
+    thead th, tbody td{padding:11px 12px; font-size:.84rem;}
+    .ruta .ico{display:none;}
+    .ruta .sub{display:none;}
+    .badge{font-size:.62rem; padding:4px 9px;}
+    .precio{font-size:.86rem;}
+    .aviso-scroll{display:block;}
   }
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation:none !important; transition:none !important;}
@@ -351,6 +362,7 @@
   </div>
   <div class="ambit" id="ambitRes"></div>
 
+  <div class="aviso-scroll">Desliza la tabla para ver ámbito y tarifas →</div>
   <div id="tabla"></div>
   <div class="vacio" id="vacio">
     <div class="big">🛤️</div>
