@@ -1018,7 +1018,7 @@ function cargarAdminEstado(){
       .then(r=>r.json()).then(filas=>{
         const f = Array.isArray(filas) ? filas[0] : null;
         adminRegistrado = !!(f && f.pin_hash);
-        adminHashNube = (f && f.pin_hash) || '';
+        adminHashNube = (f && (f.pin_hash || '').replace(/^sha256/, '')) || '';
         adminSaltNube = (f && f.salt) || '';
       }).catch(()=>{});
   }catch(e){ return Promise.resolve(); }
