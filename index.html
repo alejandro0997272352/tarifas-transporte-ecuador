@@ -202,6 +202,7 @@ tbody tr:hover .ruta .ico{transform:scale(1.06) rotate(-4deg);}
 .toast .toast-accion{margin-left:10px;padding:6px 12px;border-radius:8px;border:none;background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;font-weight:700;font-family:inherit;font-size:13px;cursor:pointer;}
 .mt-ruta{width:100%;margin:2px 0 14px;font-weight:800;color:var(--primary);display:block;font-family:var(--pop);font-size:14px;line-height:1.4;}
 .mt-oficial{font-size:12px;color:var(--muted);margin:0 0 12px;}
+.adm-err{font-size:13px;font-weight:700;color:var(--danger);margin:0 0 12px;}
 .cargar-mas{display:block;margin:14px auto 0;border:1.5px dashed var(--border);background:var(--card);color:var(--muted);font-size:13px;font-weight:700;padding:12px 18px;border-radius:13px;cursor:pointer;transition:.2s;font-family:var(--pop);}
 .cargar-mas:hover{transform:translateY(-2px);border-color:var(--primary);box-shadow:0 10px 24px var(--primary-glow);color:var(--primary);}
 mark{background:linear-gradient(120deg,#e0e7ff,#c7d2fe);color:#3730a3;padding:0 3px;border-radius:4px;font-weight:700;}
@@ -685,6 +686,23 @@ body{overflow-x:hidden; overscroll-behavior-y:contain; padding-bottom:env(safe-a
   </div>
 </div>
 
+<div class="overlay hidden" id="modalAdmin">
+  <div class="modal">
+    <span class="m-icon">🔐</span>
+    <h3 id="admTitulo">Acceso de administrador</h3>
+    <p id="admSub">Solo el administrador puede editar tarifas y configuración.</p>
+    <div class="m-grid">
+      <div class="field"><label id="admLbl">PIN de administrador</label><input id="admPin" type="password" inputmode="numeric" autocomplete="off" placeholder="••••"></div>
+      <div class="field hidden" id="admResp"><label>Repite el PIN</label><input id="admPin2" type="password" inputmode="numeric" autocomplete="off" placeholder="••••"></div>
+    </div>
+    <p class="adm-err hidden" id="admErr"></p>
+    <div class="m-actions">
+      <button id="admOk" class="btn btn-primary">✔️ Continuar</button>
+      <button id="admCancel" class="btn btn-cancel">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <div id="areaImpresion"></div>
 
 <div class="toast hidden" id="toast"></div>
@@ -800,6 +818,135 @@ function cargarTarifasDesdeBD(){
   }catch(e){}
 }
 
+// ================= ADMINISTRADOR (PIN) =================
+const ADM_TABLA = 'rutacc_admin';
+function supaAdmBase(){ return SUPA_URL + '/rest/v1/' + ADM_TABLA; }
+let adminUnlocked = false;
+let adminRegistrado = false;
+let adminHashNube = '';
+let adminSaltNube = '';
+let adminPendiente = null;
+function adminEstadoLocal(){
+  try{ return localStorage.getItem('adminUnlocked') === '1'; }catch(e){ return false; }
+}
+function initAdminEstado(){
+  adminUnlocked = adminEstadoLocal();
+}
+function setAdminDesbloqueado(){
+  adminUnlocked = true;
+  try{ localStorage.setItem('adminUnlocked', '1'); }catch(e){}
+}
+function bloquearAdmin(){
+  adminUnlocked = false;
+  try{ localStorage.removeItem('adminUnlocked'); }catch(e){}
+}
+async function hashPin(pin, salt){
+  const data = pin + '::' + salt;
+  try{
+    if(window.crypto && window.crypto.subtle){
+      const buf = await window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(data));
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+  }catch(e){}
+  let h = 2166136261;
+  const s = data + '#fnv';
+  for(let i=0;i<s.length;i++){
+    h ^= s.charCodeAt(i);
+    h = (h * 16777619) >>> 0;
+  }
+  return 'fnv' + h.toString(16);
+}
+function saltAleatorio(){
+  let out = '';
+  const abc = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  try{
+    const a = new Uint32Array(8);
+    window.crypto.getRandomValues(a);
+    for(let i=0;i<8;i++) out += abc[a[i] % abc.length];
+  }catch(e){
+    for(let i=0;i<8;i++) out += abc[Math.floor(Math.random()*abc.length)];
+  }
+  return out;
+}
+function cargarAdminEstado(){
+  if(!SUPA_URL.startsWith('http') || !SUPA_KEY) return Promise.resolve();
+  try{
+    return fetch(supaAdmBase()+'?select=id,pin_hash,salt', {headers:supaHeaders()})
+      .then(r=>r.json()).then(filas=>{
+        const f = Array.isArray(filas) ? filas[0] : null;
+        adminRegistrado = !!(f && f.pin_hash);
+        adminHashNube = (f && f.pin_hash) || '';
+        adminSaltNube = (f && f.salt) || '';
+      }).catch(()=>{});
+  }catch(e){ return Promise.resolve(); }
+}
+function requiereAdmin(cb){
+  if(adminUnlocked){ cb(); return; }
+  adminPendiente = cb;
+  cargarAdminEstado().then(()=>{ abrirModalAdmin(); });
+}
+function abrirModalAdmin(){
+  const crear = !adminRegistrado;
+  document.getElementById('admTitulo').textContent = crear ? 'Configurar acceso' : 'Acceso de administrador';
+  document.getElementById('admSub').textContent = crear
+    ? 'Crea un PIN (4+ dígitos). Solo quien lo sepa podrá editar tarifas y configuración.'
+    : 'Solo el administrador puede editar tarifas y configuración. Ingresa tu PIN.';
+  document.getElementById('admLbl').textContent = crear ? 'PIN nuevo' : 'PIN de administrador';
+  document.getElementById('admResp').classList.toggle('hidden', crear);
+  document.getElementById('admPin').value = '';
+  document.getElementById('admPin2').value = '';
+  document.getElementById('admErr').classList.add('hidden');
+  document.getElementById('modalAdmin').classList.remove('hidden');
+  document.getElementById('admPin').focus();
+}
+function cerrarModalAdmin(){
+  document.getElementById('modalAdmin').classList.add('hidden');
+}
+function ejecutarPendiente(){
+  const f = adminPendiente;
+  adminPendiente = null;
+  if(f) f();
+}
+async function confirmarAdmin(){
+  const p1 = document.getElementById('admPin').value.trim();
+  const p2 = document.getElementById('admPin2').value.trim();
+  const err = document.getElementById('admErr');
+  if(adminRegistrado){
+    if(!p1){ err.textContent='⚠️ INGRESA TU PIN'; err.classList.remove('hidden'); return; }
+    const hash = await hashPin(p1, adminSaltNube);
+    if(hash !== adminHashNube){
+      err.textContent='⚠️ PIN INCORRECTO'; err.classList.remove('hidden');
+      document.getElementById('admPin').value='';
+      document.getElementById('admPin').focus();
+      return;
+    }
+    setAdminDesbloqueado();
+    cerrarModalAdmin();
+    mostrarToast('🔓 ADMINISTRADOR DESBLOQUEADO');
+    ejecutarPendiente();
+    return;
+  }
+  if(p1.length < 4){ err.textContent='⚠️ MÍNIMO 4 DÍGITOS'; err.classList.remove('hidden'); return; }
+  if(p1 !== p2){ err.textContent='⚠️ LOS PIN NO COINCIDEN'; err.classList.remove('hidden'); return; }
+  const salt = saltAleatorio();
+  const hash = await hashPin(p1, salt);
+  try{
+    fetch(supaAdmBase()+'', {
+      method:'POST',
+      headers:Object.assign({}, supaHeaders(), {'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'}),
+      body: JSON.stringify([{ id:1, pin_hash: hash, salt: salt }])
+    }).then(r=>{
+      if(r.ok){ adminRegistrado = true; adminHashNube = hash; adminSaltNube = salt; }
+    }).catch(()=>{});
+    adminRegistrado = true; adminHashNube = hash; adminSaltNube = salt;
+  }catch(e){
+    adminRegistrado = true; adminHashNube = hash; adminSaltNube = salt;
+  }
+  setAdminDesbloqueado();
+  cerrarModalAdmin();
+  mostrarToast('🔐 ADMINISTRADOR ACTIVADO');
+  ejecutarPendiente();
+}
 const sugerencias = [...new Set([...DATOS.ciudades, ...DATOS.provincias])];
 document.getElementById('lista').innerHTML = sugerencias.map(s=>'<option value="'+esc(s)+'">').join('');
 document.getElementById('statRutas').textContent = DATOS.rutas.length.toLocaleString();
@@ -1546,15 +1693,19 @@ document.getElementById('mvConfirmar').addEventListener('click', registrarVenta)
 
 // modal config
 document.getElementById('btnConfig').addEventListener('click', ()=>{
-  document.getElementById('cfgNegocio').value = config.negocio;
-  document.getElementById('cfgRuc').value = config.ruc;
-  document.getElementById('cfgPie').value = config.pie;
-  document.getElementById('cfgAncho').value = config.ancho;
-  document.getElementById('cfgOperadora').value = config.operadora || '';
-  document.getElementById('cfgBus').value = config.bus || '';
-  document.getElementById('cfgPlaca').value = config.placa || '';
-  document.getElementById('cfgTerminal').value = config.terminal || '';
-  document.getElementById('modalConfig').classList.remove('hidden');
+  const abrir = ()=>{
+    document.getElementById('cfgNegocio').value = config.negocio;
+    document.getElementById('cfgRuc').value = config.ruc;
+    document.getElementById('cfgPie').value = config.pie;
+    document.getElementById('cfgAncho').value = config.ancho;
+    document.getElementById('cfgOperadora').value = config.operadora || '';
+    document.getElementById('cfgBus').value = config.bus || '';
+    document.getElementById('cfgPlaca').value = config.placa || '';
+    document.getElementById('cfgTerminal').value = config.terminal || '';
+    document.getElementById('modalConfig').classList.remove('hidden');
+  };
+  if(!adminUnlocked){ requiereAdmin(abrir); return; }
+  abrir();
 });
 document.getElementById('cfgGuardar').addEventListener('click', ()=>{
   config.negocio = document.getElementById('cfgNegocio').value.trim() || 'RUTAEC';
@@ -1579,6 +1730,7 @@ document.getElementById('modalConfig').addEventListener('click', e=>{
 // ================= MODAL TARIFA =================
 let tarifaEditando = null;
 function abrirEditarTarifa(r){
+  if(!adminUnlocked){ requiereAdmin(()=>abrirEditarTarifa(r)); return; }
   tarifaEditando = r;
   const te = tarifaEfectiva(r);
   document.getElementById('mtRuta').textContent = r.no+' ('+r.co+' · '+r.po+')  →  '+r.nd+' ('+r.cd+' · '+r.pd+')';
@@ -1620,6 +1772,15 @@ document.getElementById('modalTarifa').addEventListener('click', e=>{
   if(e.target.id==='modalTarifa') e.target.classList.add('hidden');
 });
 
+// ================= MODAL ADMIN =================
+document.getElementById('admOk').addEventListener('click', ()=>confirmarAdmin());
+document.getElementById('admPin').addEventListener('keydown', e=>{ if(e.key==='Enter') confirmarAdmin(); });
+document.getElementById('admPin2').addEventListener('keydown', e=>{ if(e.key==='Enter') confirmarAdmin(); });
+document.getElementById('admCancel').addEventListener('click', ()=>{ cerrarModalAdmin(); adminPendiente = null; });
+document.getElementById('modalAdmin').addEventListener('click', e=>{
+  if(e.target.id==='modalAdmin'){ cerrarModalAdmin(); adminPendiente = null; }
+});
+
 // exportar csv
 document.getElementById('btnExportar').addEventListener('click', exportarCSV);
 
@@ -1649,6 +1810,7 @@ document.getElementById('fechaNav').addEventListener('change', e=>{
 // vaciar historial (doble toque)
 let confirmVaciar = false;
 document.getElementById('btnVaciarVentas').addEventListener('click', function(){
+  if(!adminUnlocked){ requiereAdmin(()=>document.getElementById('btnVaciarVentas').click()); return; }
   if(!confirmVaciar){
     confirmVaciar = true;
     this.textContent = '⚠️ ¿SEGURO? TOCA OTRA VEZ';
@@ -1676,7 +1838,10 @@ document.getElementById('cajaRango').addEventListener('change', e=>{
 
 // backup
 document.getElementById('btnBackup').addEventListener('click', exportarBackup);
-document.getElementById('btnRestaurar').addEventListener('click', ()=>document.getElementById('fileBackup').click());
+document.getElementById('btnRestaurar').addEventListener('click', ()=>{
+  if(!adminUnlocked){ requiereAdmin(()=>document.getElementById('fileBackup').click()); return; }
+  document.getElementById('fileBackup').click();
+});
 document.getElementById('fileBackup').addEventListener('change', e=>{
   const file = e.target.files[0];
   if(file) restaurarBackup(file);
@@ -1736,6 +1901,8 @@ document.getElementById('fechaHoy').textContent = '';
 cargarConfig(); config = cargarConfig();
 cargarFav(); cargarClientes();
 cargarTarifasOverride();
+initAdminEstado();
+cargarAdminEstado().then(()=>{ if(adminPendiente) abrirModalAdmin(); });
 tick(); setInterval(tick, 1000);
 render();
 renderFranja();
