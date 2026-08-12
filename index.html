@@ -302,6 +302,41 @@ html[data-theme="dark"] .top-ruta b{color:#34d399;}
 .m-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:10px;border:1px solid var(--bord-d);background:var(--glass);cursor:pointer;font-size:13px;color:var(--muted);display:flex;align-items:center;justify-content:center;}
 .m-close:hover{border-color:var(--acc);color:var(--acc);}
 .m-acciones{display:flex;gap:9px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap;}
+/* ── maquetado de modales ── */
+.m-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 0;}
+.m-grid.cols-3{grid-template-columns:repeat(3,1fr);}
+.m-grid:empty{display:none;}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0;}
+.field label{font-size:10.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);}
+.field input,.field select{width:100%;height:44px;padding:0 13px;border-radius:12px;border:1px solid var(--bord-d);background:var(--glass);color:var(--text);font-size:14px;font-weight:600;transition:.2s;box-sizing:border-box;font-family:inherit;}
+.field select{padding-right:30px;}
+.field input::placeholder,.field select::placeholder{color:var(--muted);font-weight:500;opacity:.8;}
+.field input:focus,.field select:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px rgba(99,102,241,.18);}
+.f-ctrl{position:relative;}
+.f-ctrl input{width:100%;}
+.f-ctrl.f-money input{padding-left:28px;}
+.f-suf{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:13px;font-weight:800;color:var(--muted);pointer-events:none;}
+.m-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap;}
+.btn-cancel{background:var(--glass);color:var(--muted);border:1px solid var(--bord-d);}
+.btn-cancel:hover{color:var(--text);border-color:var(--acc);}
+.m-product{display:inline-block;background:var(--glass);border:1px solid var(--bord);border-radius:10px;padding:4px 12px;font-size:12.5px;font-weight:800;color:var(--acc-d);}
+.m-ruta{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0 2px;padding:13px 14px;border-radius:14px;background:linear-gradient(135deg,rgba(99,102,241,.13),rgba(139,92,246,.1));border:1px dashed var(--bord-d);}
+.m-ruta .m-city{font-size:14px;font-weight:800;color:var(--text);}
+.m-ruta .m-arrow{color:var(--acc);font-weight:900;font-size:15px;}
+.m-seccion{margin-top:18px;}
+.m-seccion h4{font-size:10.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--acc);margin-bottom:10px;display:flex;align-items:center;gap:9px;}
+.m-seccion h4::after{content:"";flex:1;height:1px;background:var(--bord);}
+.m-seccion .m-grid{margin-top:0;}
+.m-opcional{font-size:9.5px;font-weight:800;color:var(--muted);border:1px solid var(--bord-d);border-radius:999px;padding:2px 8px;text-transform:none;letter-spacing:.3px;}
+.chips-clientes{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;}
+.cli-chip{background:var(--glass);border:1px solid var(--bord-d);border-radius:999px;padding:7px 13px;font-size:12px;font-weight:600;color:var(--text);cursor:pointer;transition:.2s;}
+.cli-chip:hover{border-color:var(--acc);color:var(--acc);transform:translateY(-1px);}
+.cli-chip:active{transform:scale(.96);}
+.m-total{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:20px;padding:14px 18px;border-radius:14px;background:linear-gradient(135deg,#6366f1,#7c3aed);color:#fff;box-shadow:0 10px 24px rgba(99,102,241,.35);}
+.m-total span{font-size:11.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;opacity:.9;}
+.m-total b{font-size:24px;font-weight:900;letter-spacing:.5px;}
+.mt-ruta{font-size:12.5px;font-weight:800;text-align:center;color:var(--text);margin-top:14px;padding:12px 14px;border-radius:14px;background:var(--glass);border:1px solid var(--bord);}
+.mt-oficial{font-size:11.5px;color:var(--muted);text-align:center;margin-top:12px;font-weight:600;}
 
 /* ─────────────── TOAST ─────────────── */
 #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(0);z-index:300;max-width:90vw;
@@ -363,6 +398,8 @@ html[data-theme="dark"] .top-ruta b{color:#34d399;}
   .l-v-meta{text-align:left;}
   .caja-rango{flex-direction:column;align-items:stretch;}
   .caja-rango .chip{width:100%;}
+  .m-grid{grid-template-columns:1fr;}
+  .m-grid.cols-3{grid-template-columns:1fr 1fr;}
 }
 @media(max-width:360px){
   .kpis{grid-template-columns:1fr 1fr;}
@@ -704,23 +741,41 @@ html[data-theme="dark"] .top-ruta b{color:#34d399;}
 
 <div class="overlay hidden" id="modalVenta">
   <div class="modal modal-wide">
+    <button class="m-close" id="mvCerrar" title="Cerrar">✕</button>
     <span class="m-icon">🎟️</span>
     <h3>Registrar venta</h3>
-    <p>Confirma los datos antes de vender.</p>
-    <span class="m-product" id="mvOrigen"></span> → <span class="m-product" id="mvDestino"></span>
-    <div class="m-grid">
-      <div class="field"><label>Pasajes</label><input id="mvCant" type="number" min="1" max="99" value="1"></div>
-      <div class="field"><label>Precio c/u ($)</label><input id="mvPrecio" type="text" inputmode="decimal"></div>
-      <div class="field"><label>Asiento (opcional)</label><input id="mvAsiento" type="text" placeholder="Ej. 12, 14-16"></div>
-      <div class="field"><label>Cliente</label><input id="mvCliente" type="text" list="listaClientes" placeholder="Nombre del pasajero"><datalist id="listaClientes"></datalist></div>
-      <div class="field"><label>Cédula / Pasaporte</label><input id="mvCedula" type="text" inputmode="numeric" placeholder="Cédula del pasajero"></div>
-      <div class="field"><label>Operadora</label><input id="mvOperadora" type="text" placeholder="Coop. de Transporte ..."></div>
-      <div class="field"><label>N.º de bus</label><input id="mvBus" type="text" placeholder="Ej. 12"></div>
-      <div class="field"><label>Placa</label><input id="mvPlaca" type="text" placeholder="AAA-0000"></div>
-      <div class="field"><label>Terminal</label><input id="mvTerminal" type="text" placeholder="Terminal Terrestre"></div>
+    <p class="m-sub">Completa los datos y confirma la venta del pasaje.</p>
+    <div class="m-ruta">
+      <span class="m-city" id="mvOrigen"></span>
+      <span class="m-arrow">→</span>
+      <span class="m-city" id="mvDestino"></span>
     </div>
-    <div class="chips-clientes" id="chipsClientes"></div>
-    <div class="m-total"><span>Total</span><b id="mvTotal">$0,00</b></div>
+    <div class="m-seccion">
+      <h4>Datos del viaje</h4>
+      <div class="m-grid cols-3">
+        <div class="field"><label>Pasajes</label><input id="mvCant" type="number" min="1" max="99" value="1"></div>
+        <div class="field"><label>Precio c/u</label><div class="f-ctrl f-money"><span class="f-suf">$</span><input id="mvPrecio" type="text" inputmode="decimal" placeholder="0,00"></div></div>
+        <div class="field"><label>Asiento</label><input id="mvAsiento" type="text" placeholder="Ej. 12, 14-16"></div>
+      </div>
+    </div>
+    <div class="m-seccion">
+      <h4>Datos del pasajero</h4>
+      <div class="m-grid">
+        <div class="field"><label>Cliente</label><input id="mvCliente" type="text" list="listaClientes" placeholder="Nombre del pasajero"><datalist id="listaClientes"></datalist></div>
+        <div class="field"><label>Cédula / Pasaporte</label><input id="mvCedula" type="text" inputmode="numeric" placeholder="Cédula del pasajero"></div>
+      </div>
+      <div class="chips-clientes" id="chipsClientes"></div>
+    </div>
+    <div class="m-seccion">
+      <h4>Vehículo y terminal <span class="m-opcional">opcional</span></h4>
+      <div class="m-grid">
+        <div class="field"><label>Operadora</label><input id="mvOperadora" type="text" placeholder="Coop. de Transporte"></div>
+        <div class="field"><label>N.º de bus</label><input id="mvBus" type="text" placeholder="Ej. 12"></div>
+        <div class="field"><label>Placa</label><input id="mvPlaca" type="text" placeholder="AAA-0000"></div>
+        <div class="field"><label>Terminal</label><input id="mvTerminal" type="text" placeholder="Terminal Terrestre"></div>
+      </div>
+    </div>
+    <div class="m-total"><span>Total a cobrar</span><b id="mvTotal">$0,00</b></div>
     <div class="m-actions">
       <button id="mvConfirmar" class="btn btn-green">✔️ Confirmar venta</button>
       <button id="mvCancelar" class="btn btn-cancel">Cancelar</button>
@@ -752,13 +807,14 @@ html[data-theme="dark"] .top-ruta b{color:#34d399;}
 
 <div class="overlay hidden" id="modalTarifa">
   <div class="modal">
+    <button class="m-close" id="mtCerrar" title="Cerrar">✕</button>
     <span class="m-icon">✏️</span>
     <h3>Editar tarifa</h3>
-    <p>Este precio se guardará aquí y se compartirá con tu cuenta en la nube.</p>
+    <p class="m-sub">Este precio se guardará aquí y se compartirá con tu cuenta en la nube.</p>
     <p class="mt-ruta" id="mtRuta"></p>
     <div class="m-grid">
-      <div class="field"><label>Tarifa ($)</label><input id="mtTar" type="text" inputmode="decimal" placeholder="0,00"></div>
-      <div class="field"><label>Tarifa preferencial ($)</label><input id="mtPref" type="text" inputmode="decimal" placeholder="0,00"></div>
+      <div class="field"><label>Tarifa normal</label><div class="f-ctrl f-money"><span class="f-suf">$</span><input id="mtTar" type="text" inputmode="decimal" placeholder="0,00"></div></div>
+      <div class="field"><label>Tarifa preferencial</label><div class="f-ctrl f-money"><span class="f-suf">$</span><input id="mtPref" type="text" inputmode="decimal" placeholder="0,00"></div></div>
     </div>
     <p class="mt-oficial" id="mtOficial"></p>
     <div class="m-actions">
@@ -1860,6 +1916,12 @@ document.getElementById('chipsClientes').addEventListener('click', e=>{
 // modal venta
 document.getElementById('mvCancelar').addEventListener('click', ()=>{
   document.getElementById('modalVenta').classList.add('hidden');
+});
+document.getElementById('mvCerrar').addEventListener('click', ()=>{
+  document.getElementById('modalVenta').classList.add('hidden');
+});
+document.getElementById('mtCerrar').addEventListener('click', ()=>{
+  document.getElementById('modalTarifa').classList.add('hidden');
 });
 document.getElementById('modalVenta').addEventListener('click', e=>{
   if(e.target.id==='modalVenta') e.target.classList.add('hidden');
