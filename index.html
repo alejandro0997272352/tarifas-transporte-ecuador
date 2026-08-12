@@ -165,7 +165,8 @@ tbody tr:last-child td{border-bottom:none;}
 tbody tr:nth-child(even){background:rgba(99,102,241,.035);}
 tbody tr:hover{background:rgba(99,102,241,.10);}
 tbody tr.sel{background:#e0e7ff;box-shadow:inset 4px 0 0 var(--primary);}
-tbody tr{animation:fadeUp .35s backwards;}
+tbody tr{animation:fadeUp .35s backwards;contain:layout style;}
+tbody tr,.l-v-item,.top-ruta{content-visibility:auto;contain-intrinsic-size:auto 64px;}
 .ruta{display:flex;align-items:center;gap:11px;}
 .ruta .ico{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,rgba(99,102,241,.14),rgba(99,102,241,.12));border:1px solid rgba(99,102,241,.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex:none;transition:.25s;}
 tbody tr:hover .ruta .ico{transform:scale(1.06) rotate(-4deg);}
@@ -208,7 +209,7 @@ html[data-theme="dark"] .franja-fav,.fav-pill{background:var(--card);}
 
 /* ── lista de ventas ─────────────────────────── */
 .lista-v{display:flex;flex-direction:column;gap:10px;}
-.l-v-item{position:relative;display:grid;grid-template-columns:auto 1fr auto auto;gap:14px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);transition:.2s;animation:fadeUp .35s backwards;}
+.l-v-item{position:relative;display:grid;grid-template-columns:auto 1fr auto auto;gap:14px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);transition:.2s;animation:fadeUp .35s backwards;content-visibility:auto;contain-intrinsic-size:auto 64px;}
 .l-v-item:hover{background:var(--card);box-shadow:0 16px 38px rgba(60,80,140,.18);transform:translateX(4px);}
 .l-v-hora{font-family:var(--led);font-size:14px;font-weight:800;color:var(--success);background:linear-gradient(135deg,rgba(16,185,129,.12),rgba(6,182,212,.1));border:1px solid rgba(16,185,129,.25);padding:6px 10px;border-radius:10px;text-align:center;white-space:nowrap;}
 .l-v-dest{min-width:0;}
@@ -311,17 +312,16 @@ body{overflow-x:hidden; overscroll-behavior-y:contain; padding-bottom:env(safe-a
 @media(max-width:720px){.stats{grid-template-columns:1fr 1fr;}}
 @media(max-width:620px){
     body{font-size:14px;}
-    .header{padding:12px 12px 10px;}
-    .header h1{font-size:18px;}
+    .header{padding:14px 14px 12px;}
+    .header h1{font-size:20px;}
     .header p{display:none;}
-    .header .icon{width:42px;height:42px;font-size:21px;border-radius:13px;}
+    .header .icon{width:46px;height:46px;font-size:23px;border-radius:14px;}
     .header-inner{flex-wrap:wrap;}
-    .header-actions{gap:6px;flex-wrap:wrap;flex:1 1 100%;justify-content:flex-start;}
+    .header-actions{gap:8px;flex-wrap:wrap;flex:1 1 100%;justify-content:flex-start;margin-top:8px;}
     .header-title{flex:1 1 auto;min-width:0;}
-    .pill{padding:5px 10px;font-size:12px;border-radius:14px;white-space:nowrap;}
+    .pill{padding:7px 12px;font-size:13px;border-radius:16px;white-space:nowrap;}
     .pill b{max-width:none;overflow:visible;text-overflow:clip;}
-    .pill.hora-b{font-size:12px;}
-    .link-btn{padding:6px 12px;font-size:13px;border-radius:9px;}
+    .link-btn{padding:8px 13px;font-size:14px;border-radius:10px;}
     .nav{padding:10px 12px 0;gap:6px;flex-wrap:nowrap;}
     .tab{padding:10px 12px;font-size:12px;border-radius:12px;flex:1;justify-content:center;white-space:nowrap;}
     .tab .tab-badge{flex-shrink:0;}
@@ -724,10 +724,14 @@ function parsePrecio(p){ return parseFloat(p.replace('$','').replace(',','.').tr
 let filtrados = [];
 let ultimoConteo = 0;
 const PAGE = 200;
-let limite = PAGE;
+const PAGE_MOVIL = 60;
+let limite = 0;
+
+function basePage(){ return (window.innerWidth && window.innerWidth <= 620) ? PAGE_MOVIL : PAGE; }
+function resetLimite(){ limite = basePage(); }
 
 function buscar(){
-  limite = PAGE;
+  resetLimite();
   const qo = document.getElementById('origen').value.trim();
   const qd = document.getElementById('destino').value.trim();
   const dir = document.getElementById('chkDir').checked;
@@ -846,7 +850,7 @@ function render(){
   }
   tabla.innerHTML = h;
   const mas = document.getElementById('btnMas');
-  if(mas) mas.addEventListener('click', ()=>{ limite += PAGE; render(); });
+  if(mas) mas.addEventListener('click', ()=>{ limite += basePage(); render(); });
 }
 
 // ================= CONFIG NEGOCIO =================
