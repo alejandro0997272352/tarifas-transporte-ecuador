@@ -1132,6 +1132,7 @@ recomputarFolio();
 const SUPA_URL = 'https://uqpbnhxuiekjdadzybon.supabase.co';
 const SUPA_KEY = 'sb_publishable_IfR3gav3QrDV4A6ADd5_6w_AA2kpC8M';
 const SUPA_TABLA = 'rutacc_ventas';
+const DEV_TABLA = 'rutacc_dispositivos';
 let SYNC_ON = false;
 function supaHeaders(){
   return {'apikey':SUPA_KEY, 'Authorization':'Bearer '+SUPA_KEY, 'Content-Type':'application/json'};
@@ -1148,6 +1149,28 @@ function apiPing(){
         .catch(()=>{ clearTimeout(t); res(false); });
     }catch(e){ res(false); }
   });
+}
+function registrarDispositivo(){
+  if(!SUPA_URL.startsWith('http') || !SUPA_KEY) return;
+  try{
+    let devid = localStorage.getItem('rutacc_devid');
+    if(!devid){
+      const a = new Uint32Array(4);
+      if(window.crypto && window.crypto.getRandomValues) window.crypto.getRandomValues(a);
+      else for(let i=0;i<4;i++) a[i] = Math.floor(Math.random()*0xFFFFFFFF);
+      devid = Array.from(a).map(x=>x.toString(16).padStart(8,'0')).join('');
+      localStorage.setItem('rutacc_devid', devid);
+    }
+    const ua = (navigator.userAgent||'').match(/Android|iPhone|iPad|Windows|Macintosh|Linux/i);
+    const nombre = (ua ? ua[0] : 'web');
+    const veces = (parseInt(localStorage.getItem('rutacc_dev_veces')||'0',10)||0) + 1;
+    localStorage.setItem('rutacc_dev_veces', String(veces));
+    fetch(SUPA_URL + '/rest/v1/' + DEV_TABLA, {
+      method:'POST',
+      headers:Object.assign({}, supaHeaders(), {'Prefer':'resolution=merge-duplicates,return=minimal'}),
+      body: JSON.stringify([{ devid: devid, nombre: nombre, veces: veces, ultima: new Date().toISOString() }])
+    }).catch(()=>{});
+  }catch(e){}
 }
 function syncVentasFecha(clave, ventas){
   if(!SUPA_URL.startsWith('http') || !SUPA_KEY) return;
@@ -1903,6 +1926,7 @@ cargarFav(); cargarClientes();
 cargarTarifasOverride();
 initAdminEstado();
 cargarAdminEstado().then(()=>{ if(adminPendiente) abrirModalAdmin(); });
+registrarDispositivo();
 tick(); setInterval(tick, 1000);
 render();
 renderFranja();
