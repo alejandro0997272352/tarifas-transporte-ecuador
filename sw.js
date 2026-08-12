@@ -1,4 +1,4 @@
-const CACHE = 'rutacc-v8';
+const CACHE = 'rutacc-v9';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 const SUPA_HOST = 'uqpbnhxuiekjdadzybon.supabase.co';
 
